@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1280" height="720" viewBox="0 0 1280 720"
+  data-pptx-master="mt_master" data-pptx-master-name="MT Corporate Master"
+  data-pptx-layout="mt_content_comparison" data-pptx-layout-name="MT 正文 - 对比">
+  <defs>
+    <linearGradient id="header-blue" x1="0" y1="0.5" x2="1" y2="0.5">
+      <stop offset="0" stop-color="#004696"/>
+      <stop offset="1" stop-color="#3399FF"/>
+    </linearGradient>
+  </defs>
+  <rect id="master-bg" x="0" y="0" width="1280" height="720" fill="#FFFFFF"
+    data-pptx-layer="master" data-pptx-editable="false"/>
+  <rect id="comparison-header" x="0" y="0" width="1280" height="80" fill="url(#header-blue)"
+    data-pptx-layer="layout" data-pptx-editable="false"/>
+  <image id="comparison-logo" href="../images/mt_header_logo.png" x="1084.4" y="51" width="127.2" height="14.5"
+    preserveAspectRatio="none" data-pptx-layer="layout" data-pptx-editable="false"/>
+  <line id="comparison-page-divider" x1="1225.4" y1="49" x2="1225.4" y2="79.3" stroke="#FFFFFF" stroke-width="0.67"
+    data-pptx-layer="layout" data-pptx-editable="false"/>
+  <text id="comparison-footer" x="1226" y="712" text-anchor="end" font-family="Arial, 黑体, sans-serif" font-size="10.67" fill="#7A7A7A"
+    data-pptx-layer="layout" data-pptx-editable="false">For internal use - Confidential</text>
+  <rect id="comparison-head-left" x="55" y="165" width="560" height="52" rx="8" fill="#004696"
+    data-pptx-layer="layout" data-pptx-editable="false"/>
+  <rect id="comparison-head-right" x="665" y="165" width="560" height="52" rx="8" fill="#56A410"
+    data-pptx-layer="layout" data-pptx-editable="false"/>
+  <rect id="comparison-panel-left" x="55" y="233" width="560" height="417" rx="8" fill="#F4F8FC"
+    stroke="#D5DDE6" stroke-width="1" data-pptx-layer="layout" data-pptx-editable="false"/>
+  <rect id="comparison-panel-right" x="665" y="233" width="560" height="417" rx="8" fill="#F4F8FC"
+    stroke="#D5DDE6" stroke-width="1" data-pptx-layer="layout" data-pptx-editable="false"/>
+  <g id="comparison-title-slot" data-pptx-placeholder="title" data-pptx-bounds="55 20 950 60">
+    <text id="comparison-title-carrier" data-pptx-carrier="true" x="55" y="64"
+      font-family="Arial, 黑体, sans-serif" font-size="32" fill="#FFFFFF">{{PAGE_TITLE}}</text>
+  </g>
+  <g id="comparison-key-slot" data-pptx-placeholder="subtitle" data-pptx-idx="1" data-pptx-bounds="55 101 1170 42">
+    <text id="comparison-key-carrier" data-pptx-carrier="true" x="55" y="132"
+      font-family="Arial, 黑体, sans-serif" font-size="24" font-weight="bold" fill="#56A410">{{KEY_MESSAGE}}</text>
+  </g>
+  <g id="comparison-label-left-slot" data-pptx-placeholder="body" data-pptx-idx="2" data-pptx-bounds="71 173 528 36">
+    <text id="comparison-label-left-carrier" data-pptx-carrier="true" x="335" y="200" text-anchor="middle"
+      font-family="Arial, 黑体, sans-serif" font-size="24" font-weight="bold" fill="#FFFFFF">{{OPTION_A_TITLE}}</text>
+  </g>
+  <g id="comparison-label-right-slot" data-pptx-placeholder="body" data-pptx-idx="3" data-pptx-bounds="681 173 528 36">
+    <text id="comparison-label-right-carrier" data-pptx-carrier="true" x="945" y="200" text-anchor="middle"
+      font-family="Arial, 黑体, sans-serif" font-size="24" font-weight="bold" fill="#FFFFFF">{{OPTION_B_TITLE}}</text>
+  </g>
+  <g id="comparison-body-left-slot" data-pptx-placeholder="object" data-pptx-idx="4" data-pptx-bounds="79 253 512 381">
+    <text id="comparison-body-left-carrier" data-pptx-carrier="true" x="79" y="285"
+      font-family="Arial, 黑体, sans-serif" font-size="21.33" fill="#1F2937">{{OPTION_A_CONTENT}}</text>
+  </g>
+  <g id="comparison-body-right-slot" data-pptx-placeholder="object" data-pptx-idx="5" data-pptx-bounds="689 253 512 381">
+    <text id="comparison-body-right-carrier" data-pptx-carrier="true" x="689" y="285"
+      font-family="Arial, 黑体, sans-serif" font-size="21.33" fill="#1F2937">{{OPTION_B_CONTENT}}</text>
+  </g>
+  <g id="comparison-page-num-slot" data-pptx-placeholder="slide-number" data-pptx-idx="9" data-pptx-bounds="1225 34 55 45">
+    <text id="comparison-page-num-carrier" data-pptx-carrier="true" x="1235" y="63"
+      font-family="Arial, 黑体, sans-serif" font-size="18.67" fill="#FFFFFF">{{PAGE_NUM}}</text>
+  </g>
+</svg>

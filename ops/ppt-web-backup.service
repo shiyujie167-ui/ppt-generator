@@ -1,0 +1,13 @@
+[Unit]
+Description=Back up PPT Master Web data
+
+[Service]
+Type=oneshot
+ExecStart=/opt/ppt-web/scripts/backup.sh
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadOnlyPaths=/opt/ppt-web/data
+ReadWritePaths=/opt/ppt-web/backups

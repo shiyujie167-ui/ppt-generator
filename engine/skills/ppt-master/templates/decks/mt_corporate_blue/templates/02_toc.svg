@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1280" height="720" viewBox="0 0 1280 720"
+  data-pptx-master="mt_master" data-pptx-master-name="MT Corporate Master"
+  data-pptx-layout="mt_toc" data-pptx-layout-name="MT 目录">
+  <defs>
+    <linearGradient id="header-blue" x1="0" y1="0.5" x2="1" y2="0.5">
+      <stop offset="0" stop-color="#004696"/>
+      <stop offset="1" stop-color="#3399FF"/>
+    </linearGradient>
+  </defs>
+  <rect id="master-bg" x="0" y="0" width="1280" height="720" fill="#FFFFFF"
+    data-pptx-layer="master" data-pptx-editable="false"/>
+  <rect id="toc-header" x="0" y="0" width="1280" height="80" fill="url(#header-blue)"
+    data-pptx-layer="layout" data-pptx-editable="false"/>
+  <image id="toc-logo" href="../images/mt_header_logo.png" x="1084.4" y="51" width="127.2" height="14.5"
+    preserveAspectRatio="none" data-pptx-layer="layout" data-pptx-editable="false"/>
+  <line id="toc-page-divider" x1="1225.4" y1="49" x2="1225.4" y2="79.3" stroke="#FFFFFF" stroke-width="0.67"
+    data-pptx-layer="layout" data-pptx-editable="false"/>
+  <line id="toc-rail" x1="118" y1="158" x2="118" y2="570" stroke="#97CBFF" stroke-width="2"
+    data-pptx-layer="layout" data-pptx-editable="false"/>
+  <circle id="toc-num-1-circle" cx="118" cy="190" r="23" fill="#56A410"
+    data-pptx-layer="layout" data-pptx-editable="false"/>
+  <text id="toc-num-1" x="118" y="198" text-anchor="middle" font-family="Arial, 黑体, sans-serif" font-size="21.33" font-weight="bold" fill="#FFFFFF"
+    data-pptx-layer="layout" data-pptx-editable="false">01</text>
+  <circle id="toc-num-2-circle" cx="118" cy="310" r="23" fill="#56A410"
+    data-pptx-layer="layout" data-pptx-editable="false"/>
+  <text id="toc-num-2" x="118" y="318" text-anchor="middle" font-family="Arial, 黑体, sans-serif" font-size="21.33" font-weight="bold" fill="#FFFFFF"
+    data-pptx-layer="layout" data-pptx-editable="false">02</text>
+  <circle id="toc-num-3-circle" cx="118" cy="430" r="23" fill="#56A410"
+    data-pptx-layer="layout" data-pptx-editable="false"/>
+  <text id="toc-num-3" x="118" y="438" text-anchor="middle" font-family="Arial, 黑体, sans-serif" font-size="21.33" font-weight="bold" fill="#FFFFFF"
+    data-pptx-layer="layout" data-pptx-editable="false">03</text>
+  <circle id="toc-num-4-circle" cx="118" cy="550" r="23" fill="#56A410"
+    data-pptx-layer="layout" data-pptx-editable="false"/>
+  <text id="toc-num-4" x="118" y="558" text-anchor="middle" font-family="Arial, 黑体, sans-serif" font-size="21.33" font-weight="bold" fill="#FFFFFF"
+    data-pptx-layer="layout" data-pptx-editable="false">04</text>
+  <text id="toc-footer" x="1226" y="712" text-anchor="end" font-family="Arial, 黑体, sans-serif" font-size="10.67" fill="#7A7A7A"
+    data-pptx-layer="layout" data-pptx-editable="false">For internal use - Confidential</text>
+  <g id="toc-title-slot" data-pptx-placeholder="title" data-pptx-bounds="55 20 950 60">
+    <text id="toc-title-carrier" data-pptx-carrier="true" x="55" y="64"
+      font-family="Arial, 黑体, sans-serif" font-size="32" font-weight="bold" fill="#FFFFFF">{{PAGE_TITLE}}</text>
+  </g>
+  <g id="toc-item-1-slot" data-pptx-placeholder="body" data-pptx-idx="1" data-pptx-bounds="170 158 900 64">
+    <text id="toc-item-1-carrier" data-pptx-carrier="true" x="170" y="202"
+      font-family="Arial, 黑体, sans-serif" font-size="24" fill="#004696">{{TOC_ITEM_1_TITLE}}</text>
+  </g>
+  <g id="toc-item-2-slot" data-pptx-placeholder="body" data-pptx-idx="2" data-pptx-bounds="170 278 900 64">
+    <text id="toc-item-2-carrier" data-pptx-carrier="true" x="170" y="322"
+      font-family="Arial, 黑体, sans-serif" font-size="24" fill="#004696">{{TOC_ITEM_2_TITLE}}</text>
+  </g>
+  <g id="toc-item-3-slot" data-pptx-placeholder="body" data-pptx-idx="3" data-pptx-bounds="170 398 900 64">
+    <text id="toc-item-3-carrier" data-pptx-carrier="true" x="170" y="442"
+      font-family="Arial, 黑体, sans-serif" font-size="24" fill="#004696">{{TOC_ITEM_3_TITLE}}</text>
+  </g>
+  <g id="toc-item-4-slot" data-pptx-placeholder="body" data-pptx-idx="4" data-pptx-bounds="170 518 900 64">
+    <text id="toc-item-4-carrier" data-pptx-carrier="true" x="170" y="562"
+      font-family="Arial, 黑体, sans-serif" font-size="24" fill="#004696">{{TOC_ITEM_4_TITLE}}</text>
+  </g>
+  <g id="toc-page-num-slot" data-pptx-placeholder="slide-number" data-pptx-idx="9" data-pptx-bounds="1230 34 45 44">
+    <text id="toc-page-num-carrier" data-pptx-carrier="true" x="1235" y="63"
+      font-family="Arial, 黑体, sans-serif" font-size="18.67" fill="#FFFFFF">{{PAGE_NUM}}</text>
+  </g>
+</svg>

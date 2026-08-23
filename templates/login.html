@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>登录 - PPT Generator</title>
+<style>
+* { box-sizing: border-box; margin: 0; }
+html, body { height: 100%; }
+body {
+  font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #f2f4f7; color: #101828;
+  display: grid; place-items: center; padding: 24px;
+}
+.card {
+  width: min(360px, 92vw);
+  background: #fff; border: 1px solid #e9edf2; border-radius: 18px;
+  box-shadow: 0 1px 2px rgba(16,24,40,.04), 0 16px 44px rgba(16,24,40,.08);
+  padding: 30px 28px 26px; display: grid; gap: 14px;
+}
+.logo {
+  width: 44px; height: 44px; border-radius: 12px; margin: 0 auto 2px;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  box-shadow: 0 6px 14px rgba(37,99,235,.3);
+}
+.logo svg { width: 22px; height: 22px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+h1 { font-size: 17px; font-weight: 800; text-align: center; letter-spacing: .03em; }
+p.sub { text-align: center; color: #667085; font-size: 12px; margin-top: -8px; }
+label { font-size: 12.5px; font-weight: 700; }
+input {
+  width: 100%; height: 42px; padding: 0 12px; margin-top: 6px;
+  border: 1px solid #e9edf2; border-radius: 10px; background: #f9fafb;
+  font: inherit; font-size: 13px; outline: none; color: inherit;
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px #e8efff; background: #fff; }
+button {
+  height: 44px; border: 0; border-radius: 11px; cursor: pointer; margin-top: 4px;
+  font: inherit; font-size: 14px; font-weight: 700; color: #fff;
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 10px 20px rgba(37,99,235,.26);
+  transition: transform .15s ease, filter .15s ease, opacity .15s ease;
+}
+button:hover { transform: translateY(-1px); filter: brightness(1.05); }
+button:disabled { opacity: .6; cursor: wait; transform: none; }
+.err { min-height: 18px; color: #d92d20; font-size: 12px; text-align: center; }
+.foot { text-align: center; color: #98a2b3; font-size: 11px; }
+</style>
+</head>
+<body>
+<form class="card" id="loginForm">
+  <span class="logo">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="14" height="11" rx="2"></rect><path d="M7 20h14V9"></path></svg>
+  </span>
+  <h1>PPT Generator</h1>
+  <p class="sub">登录后使用你的材料库与生成任务</p>
+  <div><label for="username">用户名</label><input id="username" name="username" autocomplete="username" autofocus></div>
+  <div><label for="password">密码</label><input id="password" name="password" type="password" autocomplete="current-password"></div>
+  <div class="err" id="err"></div>
+  <button type="submit" id="submitBtn">登 录</button>
+  <div class="foot">材料与任务按账号隔离 · 关键数字请对照原始材料复核</div>
+</form>
+<script>
+const form = document.getElementById('loginForm');
+form.onsubmit = async e => {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn'), err = document.getElementById('err');
+  err.textContent = ''; btn.disabled = true;
+  try {
+    const res = await fetch('api/login', {method: 'POST', body: new FormData(form)});
+    const data = await res.json();
+    if (data.error) { err.textContent = data.error; return; }
+    location.href = './';
+  } catch (ex) {
+    err.textContent = '登录失败:' + ex.message;
+  } finally {
+    btn.disabled = false;
+  }
+};
+</script>
+</body>
+</html>

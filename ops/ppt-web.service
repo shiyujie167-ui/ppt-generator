@@ -1,0 +1,28 @@
+[Unit]
+Description=PPT Master Web application
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ppt-web
+Group=ppt-web
+WorkingDirectory=/opt/ppt-web/current
+EnvironmentFile=/etc/ppt-web/ppt-web.env
+Environment=PYTHONUNBUFFERED=1
+Environment=PPT_DATA_DIR=/opt/ppt-web/data
+Environment=PPT_PYTHON_BIN=/opt/ppt-web/current/.venv/bin/python
+# ExecStart override wins over any legacy PPT_BASE_PATH in EnvironmentFile.
+ExecStart=/usr/bin/env PPT_BASE_PATH=/ppt-generator /opt/ppt-web/current/.venv/bin/python /opt/ppt-web/current/app.py
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=120
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/opt/ppt-web/data /opt/ppt-web/projects
+
+[Install]
+WantedBy=multi-user.target

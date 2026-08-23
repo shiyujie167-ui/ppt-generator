@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1280" height="720" viewBox="0 0 1280 720"
+  data-pptx-master="mt_master" data-pptx-master-name="MT Corporate Master"
+  data-pptx-layout="mt_cover" data-pptx-layout-name="MT 封面">
+  <defs>
+    <linearGradient id="cover-blue" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#004696"/>
+      <stop offset="1" stop-color="#3399FF"/>
+    </linearGradient>
+  </defs>
+  <rect id="master-bg" x="0" y="0" width="1280" height="720" fill="#FFFFFF"
+    data-pptx-layer="master" data-pptx-editable="false"/>
+  <rect id="cover-blue-panel" x="0" y="0" width="338" height="720" fill="url(#cover-blue)"
+    data-pptx-layer="layout" data-pptx-editable="false"/>
+  <rect id="cover-white-panel" x="338" y="0" width="942" height="277" fill="#FFFFFF"
+    data-pptx-layer="layout" data-pptx-editable="false"/>
+  <polygon id="cover-green-accent" points="315,0 338,0 338,720 315,720" fill="#56A410"
+    data-pptx-layer="layout" data-pptx-editable="false"/>
+  <image id="cover-brand-image" href="../images/mt_cover_brand.png" x="498" y="545" width="285" height="175"
+    preserveAspectRatio="none" data-pptx-layer="layout" data-pptx-editable="false"/>
+  <g id="company-cover-hero-slot" data-pptx-placeholder="picture" data-pptx-idx="10"
+    data-pptx-bounds="338 0 942 277">
+    <image id="company-cover-hero-carrier" data-pptx-carrier="true"
+      href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4//8/AwAI/AL+p5qgoAAAAABJRU5ErkJggg=="
+      x="338" y="0" width="942" height="277" preserveAspectRatio="xMidYMid slice"/>
+  </g>
+  <g id="cover-title-slot" data-pptx-placeholder="title" data-pptx-bounds="378 292 850 72">
+    <text id="cover-title-carrier" data-pptx-carrier="true" x="388" y="343"
+      font-family="Arial, 黑体, sans-serif" font-size="42.67" font-weight="bold" fill="#004696">{{TITLE}}</text>
+  </g>
+  <g id="cover-subtitle-slot" data-pptx-placeholder="subtitle" data-pptx-idx="1" data-pptx-bounds="378 365 850 58">
+    <text id="cover-subtitle-carrier" data-pptx-carrier="true" x="388" y="407"
+      font-family="Arial, 黑体, sans-serif" font-size="32" fill="#1F2937">{{SUBTITLE}}</text>
+  </g>
+  <g id="cover-location-slot" data-pptx-placeholder="body" data-pptx-idx="2" data-pptx-bounds="55 206 250 34">
+    <text id="cover-location-carrier" data-pptx-carrier="true" x="64" y="234"
+      font-family="Arial, 黑体, sans-serif" font-size="21.33" fill="#FFFFFF">{{LOCATION}}</text>
+  </g>
+  <g id="cover-date-slot" data-pptx-placeholder="date" data-pptx-idx="3" data-pptx-bounds="55 242 250 34">
+    <text id="cover-date-carrier" data-pptx-carrier="true" x="64" y="270"
+      font-family="Arial, 黑体, sans-serif" font-size="21.33" fill="#FFFFFF">{{DATE}}</text>
+  </g>
+  <g id="cover-author-slot" data-pptx-placeholder="footer" data-pptx-idx="4" data-pptx-bounds="55 278 250 34">
+    <text id="cover-author-carrier" data-pptx-carrier="true" x="64" y="306"
+      font-family="Arial, 黑体, sans-serif" font-size="21.33" fill="#FFFFFF">{{AUTHOR}}</text>
+  </g>
+</svg>

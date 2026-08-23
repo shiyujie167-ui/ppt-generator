@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily PPT Master Web backup
+
+[Timer]
+OnCalendar=*-*-* 02:20:00
+RandomizedDelaySec=20m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

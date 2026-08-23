@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1280" height="720" viewBox="0 0 1280 720"
+  data-pptx-master="mt_master" data-pptx-master-name="MT Corporate Master"
+  data-pptx-layout="mt_content_image_right" data-pptx-layout-name="MT 正文 - 右图">
+  <defs>
+    <linearGradient id="header-blue" x1="0" y1="0.5" x2="1" y2="0.5">
+      <stop offset="0" stop-color="#004696"/>
+      <stop offset="1" stop-color="#3399FF"/>
+    </linearGradient>
+  </defs>
+  <rect id="master-bg" x="0" y="0" width="1280" height="720" fill="#FFFFFF"
+    data-pptx-layer="master" data-pptx-editable="false"/>
+  <rect id="image-right-header" x="0" y="0" width="1280" height="80" fill="url(#header-blue)"
+    data-pptx-layer="layout" data-pptx-editable="false"/>
+  <image id="image-right-logo" href="../images/mt_header_logo.png" x="1084.4" y="51" width="127.2" height="14.5"
+    preserveAspectRatio="none" data-pptx-layer="layout" data-pptx-editable="false"/>
+  <line id="image-right-page-divider" x1="1225.4" y1="49" x2="1225.4" y2="79.3" stroke="#FFFFFF" stroke-width="0.67"
+    data-pptx-layer="layout" data-pptx-editable="false"/>
+  <rect id="image-right-frame" x="760" y="170" width="465" height="430" fill="#F4F8FC" stroke="#97CBFF" stroke-width="2"
+    data-pptx-layer="layout" data-pptx-editable="false"/>
+  <text id="image-right-footer" x="1226" y="712" text-anchor="end" font-family="Arial, 黑体, sans-serif" font-size="10.67" fill="#7A7A7A"
+    data-pptx-layer="layout" data-pptx-editable="false">For internal use - Confidential</text>
+  <g id="image-right-title-slot" data-pptx-placeholder="title" data-pptx-bounds="55 20 950 60">
+    <text id="image-right-title-carrier" data-pptx-carrier="true" x="55" y="64"
+      font-family="Arial, 黑体, sans-serif" font-size="32" fill="#FFFFFF">{{PAGE_TITLE}}</text>
+  </g>
+  <g id="image-right-key-slot" data-pptx-placeholder="subtitle" data-pptx-idx="1" data-pptx-bounds="55 101 1170 42">
+    <text id="image-right-key-carrier" data-pptx-carrier="true" x="55" y="132"
+      font-family="Arial, 黑体, sans-serif" font-size="24" font-weight="bold" fill="#56A410">{{KEY_MESSAGE}}</text>
+  </g>
+  <g id="image-right-body-slot" data-pptx-placeholder="body" data-pptx-idx="2" data-pptx-bounds="55 170 650 430">
+    <text id="image-right-body-carrier" data-pptx-carrier="true" x="55" y="200"
+      font-family="Arial, 黑体, sans-serif" font-size="21.33" fill="#1F2937">{{CONTENT_AREA}}</text>
+  </g>
+  <g id="image-right-media-slot" data-pptx-placeholder="body" data-pptx-idx="3" data-pptx-bounds="780 190 425 390">
+    <text id="image-right-media-carrier" data-pptx-carrier="true" x="992" y="395" text-anchor="middle"
+      font-family="Arial, 黑体, sans-serif" font-size="21.33" fill="#004696">{{IMAGE_AREA}}</text>
+  </g>
+  <g id="image-right-page-num-slot" data-pptx-placeholder="slide-number" data-pptx-idx="9" data-pptx-bounds="1225 34 55 45">
+    <text id="image-right-page-num-carrier" data-pptx-carrier="true" x="1235" y="63"
+      font-family="Arial, 黑体, sans-serif" font-size="18.67" fill="#FFFFFF">{{PAGE_NUM}}</text>
+  </g>
+</svg>

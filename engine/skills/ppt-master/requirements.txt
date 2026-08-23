@@ -1,0 +1,32 @@
+# Engine dependencies — trimmed for the vendored ppt-web engine.
+# 本文件是上游 skills/ppt-master/requirements.txt 的裁剪版:只保留
+# ppt-web 随附脚本闭包(source_to_md / project_manager / analyze_images /
+# svg_quality_checker / total_md_split / finalize_svg / svg_to_pptx /
+# preset_shape_svg / shape_boolean_svg)实际用到的依赖。
+# 已移除:edge-tts、google-genai、flask、numpy(对应的旁白/AI生图/编辑器脚本未随附)。
+
+# SVG → PPTX(svg_to_pptx.py 及其包)
+python-pptx>=0.6.21
+XlsxWriter>=3.0.0
+skia-pathops>=0.9.2
+uharfbuzz>=0.50.0
+
+# PDF → Markdown(source_to_md/pdf_to_md.py)
+PyMuPDF>=1.23.0
+
+# 文档 → Markdown(source_to_md/doc_to_md.py;冷门格式另需系统安装 pandoc)
+mammoth>=1.6.0
+markdownify>=0.11.6
+ebooklib>=0.18
+nbconvert>=7.0.0
+
+# Excel → Markdown(source_to_md/excel_to_md.py)
+openpyxl>=3.1.0
+
+# 图片分析与位图嵌入(analyze_images.py、svg_finalize)
+Pillow>=9.0.0
+
+# 网页 → Markdown(source_to_md/web_to_md.py;curl_cffi 可选,用于微信等反爬站点)
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+curl_cffi>=0.7.0

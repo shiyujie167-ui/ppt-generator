@@ -1,0 +1,8 @@
+# Web 服务
+fastapi>=0.110
+uvicorn>=0.29
+python-multipart>=0.0.9
+certifi>=2024.2.2
+
+# 内置生成引擎(engine/,归档自 MIT 许可的 PPT Master,见 engine/NOTICE.md)
+-r engine/skills/ppt-master/requirements.txt
