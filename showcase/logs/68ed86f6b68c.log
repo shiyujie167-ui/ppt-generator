@@ -1,0 +1,673 @@
+[00:51:31] 任务开始(生成;真实运行;模型:gpt-5.6-sol)
+
+[00:51:31] API Agent 第 1 轮
+
+[00:51:35] Agent 调用工具:read_text_file
+
+[00:51:35] 读取 AGENTS.md:第 1-107 行
+
+[00:51:35] API Agent 第 2 轮
+
+[00:51:41] Agent 调用工具:read_text_file
+
+[00:51:41] 读取 SKILL.md:第 1-65 行
+
+[00:51:41] API Agent 第 3 轮
+
+[00:51:45] Agent 调用工具:read_text_file
+
+[00:51:45] 读取 routing.md:第 1-139 行
+
+[00:51:45] API Agent 第 4 轮
+
+[00:51:49] Agent 调用工具:read_text_file
+
+[00:51:49] 读取 generate-pptx.md:第 1-614 行
+
+[00:51:49] API Agent 第 5 轮
+
+[00:51:54] Agent 调用工具:read_text_file
+
+[00:51:54] 读取 粘贴文本_081756.txt:第 1-1 行
+
+[00:51:54] API Agent 第 6 轮
+
+[00:52:00] Agent 调用工具:run_ppt_script
+
+[00:52:00] 运行 project_manager.py init web_68ed86f6b68c --format ppt169
+
+[00:52:00] project_manager.py 结束:exit=0, 0.33s
+
+[00:52:00] API Agent 第 7 轮
+
+[00:52:05] Agent 调用工具:run_ppt_script
+
+[00:52:05] 运行 project_manager.py import-sources <server>/ppt-web/releases/2d2dcbc319d1a872aa12dfc936917f73a1d63124/engine/projects/web_68ed86f6b68c_ppt169_20260814 <server>/ppt-web/data/uploads/68ed86f6b68c/粘贴文本_081756.txt
+
+[00:52:05] project_manager.py 结束:exit=0, 0.33s
+
+[00:52:05] API Agent 第 8 轮
+
+[00:52:12] Agent 调用工具:read_text_file
+
+[00:52:12] 读取 apply-template-workspace.md:第 1-117 行
+
+[00:52:12] API Agent 第 9 轮
+
+[00:52:16] Agent 调用工具:read_text_file
+
+[00:52:16] 读取 README.md:第 1-121 行
+
+[00:52:16] API Agent 第 10 轮
+
+[00:52:20] Agent 调用工具:read_text_file
+
+[00:52:20] 读取 README.md:第 1-137 行
+
+[00:52:20] API Agent 第 11 轮
+
+[00:52:25] Agent 调用工具:install_template_workspace
+
+[00:52:25] 安装模板工作区:共 100 个文件
+
+[00:52:25] API Agent 第 12 轮
+
+[00:52:29] Agent 调用工具:read_text_file
+
+[00:52:29] 读取 design_spec.md:第 1-162 行
+
+[00:52:29] API Agent 第 13 轮
+
+[00:52:33] Agent 调用工具:read_text_file
+
+[00:52:33] 读取 strategist.md:第 1-500 行
+
+[00:52:33] API Agent 第 14 轮
+
+[00:52:37] Agent 调用工具:read_text_file
+
+[00:52:37] 读取 strategist-template.md:第 1-82 行
+
+[00:52:37] API Agent 第 15 轮
+
+[00:52:43] Agent 调用工具:read_text_file
+
+[00:52:43] 读取 strategist-image.md:第 1-64 行
+
+[00:52:43] API Agent 第 16 轮
+
+[00:52:46] Agent 调用工具:read_text_file
+
+[00:52:46] 读取 image-layout-spec.md:第 1-184 行
+
+[00:52:46] API Agent 第 17 轮
+
+[00:52:49] Agent 调用工具:read_text_file
+
+[00:52:49] 读取 image-layout-patterns.md:第 1-280 行
+
+[00:52:49] API Agent 第 18 轮
+
+[00:52:53] Agent 调用工具:read_text_file
+
+[00:52:53] 读取 _index.md:第 1-112 行
+
+[00:52:53] API Agent 第 19 轮
+
+[00:52:58] Agent 调用工具:read_text_file
+
+[00:52:58] 读取 vector-illustration.md:第 1-36 行
+
+[00:52:58] API Agent 第 20 轮
+
+[00:53:04] Agent 调用工具:read_text_file
+
+[00:53:04] 读取 design_spec_reference.md:第 1-233 行
+
+[00:53:04] API Agent 第 21 轮
+
+[00:53:14] Agent 调用工具:read_text_file
+
+[00:53:14] 读取 spec_lock_reference.md:第 1-132 行
+
+[00:53:14] API Agent 第 22 轮
+
+[00:53:25] Agent 调用工具:read_text_file
+
+[00:53:25] 读取 _index.md:第 1-75 行
+
+[00:53:25] API Agent 第 23 轮
+
+[00:53:34] Agent 调用工具:read_text_file
+
+[00:53:34] 读取 _index.md:第 1-108 行
+
+[00:53:34] API Agent 第 24 轮
+
+[00:53:41] Agent 调用工具:read_text_file
+
+[00:53:41] 读取 swiss-minimal.md:第 1-39 行
+
+[00:53:41] API Agent 第 25 轮
+
+[00:53:50] Agent 调用工具:read_text_file
+
+[00:53:50] 读取 instructional.md:第 1-45 行
+
+[00:53:50] API Agent 第 26 轮
+
+[00:53:56] Agent 调用工具:read_text_file
+
+[00:53:56] 读取 image-base.md:第 1-148 行
+
+[00:53:56] API Agent 第 27 轮
+
+[00:54:01] Agent 调用工具:read_text_file
+
+[00:54:01] 读取 image-generator.md:第 1-500 行
+
+[00:54:01] API Agent 第 28 轮
+
+[00:54:07] Agent 调用工具:read_text_file
+
+[00:54:07] 读取 image-generator.md:第 500-619 行
+
+[00:54:07] API Agent 第 29 轮
+
+[00:54:14] Agent 调用工具:list_files
+
+[00:54:14] 列出 templates: 11 项
+
+[00:54:14] API Agent 第 30 轮
+
+[00:54:19] Agent 调用工具:read_text_file
+
+[00:54:19] 读取 01_cover.svg:第 1-46 行
+
+[00:54:19] API Agent 第 31 轮
+
+[00:55:27] Agent 调用工具:write_text_file
+
+[00:55:27] 写入 design_spec.md (14670 字符)
+
+[00:55:27] API Agent 第 32 轮
+
+[00:55:45] Agent 调用工具:write_text_file
+
+[00:55:45] 写入 spec_lock.md (2168 字符)
+
+[00:55:45] API Agent 第 33 轮
+
+[00:55:50] Agent 调用工具:run_ppt_script
+
+[00:55:50] 运行 project_manager.py validate <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814
+
+[00:55:51] project_manager.py 结束:exit=1, 0.34s
+
+[00:55:51] API Agent 第 34 轮
+
+[00:55:57] Agent 调用工具:replace_text_file
+
+[00:55:57] 更新 spec_lock.md:替换 1 处
+
+[00:55:57] API Agent 第 35 轮
+
+[00:56:02] Agent 调用工具:run_ppt_script
+
+[00:56:02] 运行 project_manager.py validate <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814
+
+[00:56:03] project_manager.py 结束:exit=0, 0.34s
+
+[00:56:03] API Agent 第 36 轮
+
+[00:56:39] Agent 调用工具:write_text_file
+
+[00:56:39] 写入 image_prompts.json (7810 字符)
+
+[00:56:39] API Agent 第 37 轮
+
+[00:56:47] Agent 调用工具:run_ppt_script
+
+[00:56:47] 运行 image_gen.py --render-md <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814/images/image_prompts.json
+
+[00:56:47] image_gen.py 结束:exit=0, 0.06s
+
+[00:56:47] API Agent 第 38 轮
+
+[00:56:52] Agent 调用工具:run_ppt_script
+
+[00:56:52] 运行 image_gen.py --manifest <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814/images/image_prompts.json
+
+[01:11:52] image_gen.py 超时:900s
+
+[01:11:52] API Agent 第 39 轮
+
+[01:11:54] API 瞬时错误,5s 后重试(1/4):API HTTP 429:{'message': 'Too many pending requests, please retry later', 'type': 'rate_limit_error'}
+
+[01:12:00] API 瞬时错误,10s 后重试(2/4):API HTTP 429:{'message': 'Too many pending requests, please retry later', 'type': 'rate_limit_error'}
+
+[01:12:10] API 瞬时错误,20s 后重试(3/4):API HTTP 429:{'message': 'Too many pending requests, please retry later', 'type': 'rate_limit_error'}
+
+[01:12:32] API 瞬时错误,40s 后重试(4/4):API HTTP 429:{'message': 'Too many pending requests, please retry later', 'type': 'rate_limit_error'}
+
+[01:13:23] Agent 调用工具:run_ppt_script
+
+[01:13:23] 运行 image_gen.py --manifest <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814/images/image_prompts.json
+
+[01:14:15] image_gen.py 结束:exit=0, 52.26s
+
+[01:14:15] API Agent 第 40 轮
+
+[01:14:23] Agent 调用工具:run_ppt_script
+
+[01:14:23] 运行 analyze_images.py <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814/images
+
+[01:14:23] analyze_images.py 结束:exit=1, 0.19s
+
+[01:14:23] API Agent 第 41 轮
+
+[01:19:24] API 瞬时错误,5s 后重试(1/4):API 请求超过 300 秒
+
+[01:19:30] API 瞬时错误,10s 后重试(2/4):API HTTP 429:{'message': 'Too many pending requests, please retry later', 'type': 'rate_limit_error'}
+
+[01:19:41] API 瞬时错误,20s 后重试(3/4):API HTTP 429:{'message': 'Too many pending requests, please retry later', 'type': 'rate_limit_error'}
+
+[01:20:02] API 瞬时错误,40s 后重试(4/4):API HTTP 429:{'message': 'Too many pending requests, please retry later', 'type': 'rate_limit_error'}
+
+[01:22:59] Agent 调用工具:view_image
+
+[01:22:59] 查看图片 company_cover_hero.png(原图,751051 字节):Verify recognizable enterprise production-chain subject and ultra-wide center-cr
+
+[01:22:59] API Agent 第 42 轮
+
+[01:23:16] Agent 调用工具:view_image
+
+[01:23:16] 查看图片 materials_to_context.png(原图,879099 字节):Verify the generated material-normalization scene, focal direction, and crop saf
+
+[01:23:16] API Agent 第 43 轮
+
+[01:23:18] API 瞬时错误,5s 后重试(1/4):API HTTP 429:{'message': 'Too many pending requests, please retry later', 'type': 'rate_limit_error'}
+
+[01:23:25] API 瞬时错误,10s 后重试(2/4):API HTTP 429:{'message': 'Too many pending requests, please retry later', 'type': 'rate_limit_error'}
+
+[01:23:44] Agent 调用工具:view_image
+
+[01:23:44] 查看图片 governed_agent.png(已缩样(≤1568px JPEG),269241 字节):Verify the governed-agent scene and identify safe callout regions for Slide 06.
+
+[01:23:44] API Agent 第 44 轮
+
+[01:24:00] Agent 调用工具:view_image
+
+[01:24:00] 查看图片 editable_pptx.png(原图,559572 字节):Verify the editable-object outcome scene and crop safety for the closing Slide 1
+
+[01:24:00] API Agent 第 45 轮
+
+[01:24:08] Agent 调用工具:replace_text_file
+
+[01:24:08] 工具 replace_text_file 失败:期望匹配 4 次，实际 3 次；未修改
+
+[01:24:08] API Agent 第 46 轮
+
+[01:24:24] Agent 调用工具:replace_text_file
+
+[01:24:24] 更新 design_spec.md:替换 1 处
+
+[01:24:24] API Agent 第 47 轮
+
+[01:24:31] Agent 调用工具:replace_text_file
+
+[01:24:31] 更新 design_spec.md:替换 3 处
+
+[01:24:31] API Agent 第 48 轮
+
+[01:24:49] Agent 调用工具:read_text_file
+
+[01:24:49] 读取 executor-base.md:第 1-309 行
+
+[01:24:49] API Agent 第 49 轮
+
+[01:25:08] Agent 调用工具:read_text_file
+
+[01:25:08] 读取 shared-standards-core.md:第 1-220 行
+
+[01:25:08] API Agent 第 50 轮
+
+[01:25:14] Agent 调用工具:read_text_file
+
+[01:25:14] 读取 svg-effects.md:第 1-180 行
+
+[01:25:14] API Agent 第 51 轮
+
+[01:25:20] Agent 调用工具:read_text_file
+
+[01:25:20] 读取 native-shape-authoring.md:第 1-220 行
+
+[01:25:20] API Agent 第 52 轮
+
+[01:25:26] Agent 调用工具:read_text_file
+
+[01:25:26] 读取 semantic-svg.md:第 1-132 行
+
+[01:25:26] API Agent 第 53 轮
+
+[01:25:31] Agent 调用工具:read_text_file
+
+[01:25:31] 读取 executor-image.md:第 1-76 行
+
+[01:25:31] API Agent 第 54 轮
+
+[01:25:45] Agent 调用工具:read_text_file
+
+[01:25:45] 读取 svg-image-embedding.md:第 1-202 行
+
+[01:25:45] API Agent 第 55 轮
+
+[01:26:11] Agent 调用工具:write_text_file
+
+[01:26:11] 写入 01_cover.svg (1799 字符)
+
+[01:26:11] API Agent 第 56 轮
+
+[01:26:17] Agent 调用工具:run_ppt_script
+
+[01:26:17] 工具 run_ppt_script 失败:AI 公司封面无法同步预览:封面 SVG 缺少图片槽
+
+[01:26:17] API Agent 第 57 轮
+
+[01:26:28] Agent 调用工具:replace_text_file
+
+[01:26:28] 更新 01_cover.svg:替换 1 处
+
+[01:26:28] API Agent 第 58 轮
+
+[01:26:34] Agent 调用工具:run_ppt_script
+
+[01:26:34] 运行 svg_quality_checker.py <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814 --stage first-page --json
+
+[01:26:34] svg_quality_checker.py 结束:exit=1, 0.59s
+
+[01:26:34] API Agent 第 59 轮
+
+[01:26:42] Agent 调用工具:replace_text_file
+
+[01:26:42] 更新 01_cover.svg:替换 1 处
+
+[01:26:42] API Agent 第 60 轮
+
+[01:26:51] Agent 调用工具:run_ppt_script
+
+[01:26:51] 运行 svg_quality_checker.py <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814 --stage first-page --json
+
+[01:26:52] svg_quality_checker.py 结束:exit=0, 0.59s
+
+[01:26:52] API Agent 第 61 轮
+
+[01:27:19] Agent 调用工具:write_text_file
+
+[01:27:19] 写入 02_agenda.svg (2832 字符)
+
+[01:27:19] API Agent 第 62 轮
+
+[01:27:58] Agent 调用工具:write_text_file
+
+[01:27:58] 写入 03_beyond_text_to_slides.svg (4897 字符)
+
+[01:27:58] API Agent 第 63 轮
+
+[01:28:24] Agent 调用工具:write_text_file
+
+[01:28:24] 写入 04_materials_to_context.svg (3074 字符)
+
+[01:28:24] API Agent 第 64 轮
+
+[01:29:02] Agent 调用工具:write_text_file
+
+[01:29:02] 写入 05_plan_before_design.svg (4765 字符)
+
+[01:29:02] API Agent 第 65 轮
+
+[01:29:13] API 瞬时错误,5s 后重试(1/4):API HTTP 502:
+
+[01:29:48] Agent 调用工具:write_text_file
+
+[01:29:48] 写入 06_governed_agent.svg (3371 字符)
+
+[01:29:48] API Agent 第 66 轮
+
+[01:30:25] Agent 调用工具:write_text_file
+
+[01:30:25] 写入 07_svg_to_pptx.svg (4497 字符)
+
+[01:30:25] API Agent 第 67 轮
+
+[01:31:01] Agent 调用工具:write_text_file
+
+[01:31:01] 写入 08_three_systems.svg (4344 字符)
+
+[01:31:01] API Agent 第 68 轮
+
+[01:31:40] Agent 调用工具:write_text_file
+
+[01:31:40] 写入 09_enterprise_controls.svg (4653 字符)
+
+[01:31:40] API Agent 第 69 轮
+
+[01:32:09] Agent 调用工具:write_text_file
+
+[01:32:09] 写入 10_strategic_value.svg (3241 字符)
+
+[01:32:09] API Agent 第 70 轮
+
+[01:32:18] Agent 调用工具:run_ppt_script
+
+[01:32:18] 运行 svg_quality_checker.py <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814 --stage final --json
+
+[01:32:19] svg_quality_checker.py 结束:exit=1, 0.85s
+
+[01:32:19] API Agent 第 71 轮
+
+[01:32:29] Agent 调用工具:replace_text_file
+
+[01:32:29] 更新 design_spec.md:替换 1 处
+
+[01:32:29] API Agent 第 72 轮
+
+[01:32:36] Agent 调用工具:replace_text_file
+
+[01:32:36] 更新 spec_lock.md:替换 1 处
+
+[01:32:36] API Agent 第 73 轮
+
+[01:32:42] Agent 调用工具:replace_text_file
+
+[01:32:42] 更新 design_spec.md:替换 4 处
+
+[01:32:42] API Agent 第 74 轮
+
+[01:32:52] Agent 调用工具:replace_text_file
+
+[01:32:52] 更新 design_spec.md:替换 1 处
+
+[01:32:52] API Agent 第 75 轮
+
+[01:33:02] Agent 调用工具:replace_text_file
+
+[01:33:02] 更新 spec_lock.md:替换 1 处
+
+[01:33:02] API Agent 第 76 轮
+
+[01:33:07] Agent 调用工具:replace_text_file
+
+[01:33:07] 工具 replace_text_file 失败:期望匹配 5 次，实际 13 次；未修改
+
+[01:33:07] API Agent 第 77 轮
+
+[01:33:17] Agent 调用工具:replace_text_file
+
+[01:33:17] 更新 05_plan_before_design.svg:替换 1 处
+
+[01:33:17] API Agent 第 78 轮
+
+[01:33:26] Agent 调用工具:replace_text_file
+
+[01:33:26] 更新 05_plan_before_design.svg:替换 1 处
+
+[01:33:26] API Agent 第 79 轮
+
+[01:33:32] Agent 调用工具:run_ppt_script
+
+[01:33:32] 运行 project_manager.py validate <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814
+
+[01:33:32] project_manager.py 结束:exit=0, 0.34s
+
+[01:33:32] API Agent 第 80 轮
+
+[01:33:38] Agent 调用工具:run_ppt_script
+
+[01:33:38] 运行 svg_quality_checker.py <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814 --stage final --json
+
+[01:33:39] svg_quality_checker.py 结束:exit=1, 0.83s
+
+[01:33:39] API Agent 第 81 轮
+
+[01:33:49] Agent 调用工具:read_text_file
+
+[01:33:49] 读取 design_spec.md:第 120-149 行
+
+[01:33:49] API Agent 第 82 轮
+
+[01:33:59] Agent 调用工具:replace_text_file
+
+[01:33:59] 更新 design_spec.md:替换 1 处
+
+[01:33:59] API Agent 第 83 轮
+
+[01:34:06] Agent 调用工具:replace_text_file
+
+[01:34:06] 更新 05_plan_before_design.svg:替换 1 处
+
+[01:34:06] API Agent 第 84 轮
+
+[01:34:14] Agent 调用工具:run_ppt_script
+
+[01:34:14] 运行 svg_quality_checker.py <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814 --stage final --json
+
+[01:34:15] svg_quality_checker.py 结束:exit=1, 0.84s
+
+[01:34:15] API Agent 第 85 轮
+
+[01:34:21] Agent 调用工具:replace_text_file
+
+[01:34:21] 更新 01_cover.svg:替换 1 处
+
+[01:34:21] API Agent 第 86 轮
+
+[01:34:27] Agent 调用工具:run_ppt_script
+
+[01:34:27] 运行 svg_quality_checker.py <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814 --stage final --json
+
+[01:34:28] svg_quality_checker.py 结束:exit=0, 0.84s
+
+[01:34:28] API Agent 第 87 轮
+
+[01:34:40] Agent 调用工具:write_text_file
+
+[01:34:40] 写入 native_fill.json (232 字符)
+
+[01:34:40] API Agent 第 88 轮
+
+[01:34:44] Agent 调用工具:run_ppt_script
+
+[01:34:44] 运行 finalize_svg.py <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814
+
+[01:34:54] finalize_svg.py 结束:exit=0, 10.05s
+
+[01:34:54] API Agent 第 89 轮
+
+[01:35:02] Agent 调用工具:run_ppt_script
+
+[01:35:02] 运行 svg_to_pptx.py <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814 --no-notes --pptx-structure flat
+
+[01:35:03] svg_to_pptx.py 结束:exit=0, 1.29s
+
+[01:35:03] API Agent 第 90 轮
+
+[01:35:11] Agent 调用工具:run_ppt_script
+
+[01:35:11] 运行 svg_quality_checker.py <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814 --stage final --json
+
+[01:35:12] svg_quality_checker.py 结束:exit=0, 0.85s
+
+[01:35:12] API Agent 第 91 轮
+
+[01:35:48] Agent 调用工具:run_ppt_script
+
+[01:35:48] 运行 svg_to_pptx.py <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814 --no-notes --pptx-structure flat
+
+[01:35:49] svg_to_pptx.py 结束:exit=0, 1.29s
+
+[01:35:49] API Agent 第 92 轮
+
+[01:35:56] Agent 调用工具:read_text_file
+
+[01:35:56] 读取 web_68ed86f6b68c_20260814_013548.report.json:第 1-273 行
+
+[01:35:56] API Agent 第 93 轮
+
+[01:36:06] Agent 调用工具:run_ppt_script
+
+[01:36:06] 运行 svg_quality_checker.py <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814 --stage final
+
+[01:36:07] svg_quality_checker.py 结束:exit=0, 0.84s
+
+[01:36:07] API Agent 第 94 轮
+
+[01:36:18] Agent 调用工具:run_ppt_script
+
+[01:36:18] 运行 svg_to_pptx.py <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814 --no-notes --pptx-structure flat
+
+[01:36:19] svg_to_pptx.py 结束:exit=0, 1.3s
+
+[01:36:19] API Agent 第 95 轮
+
+[01:36:26] Agent 调用工具:read_text_file
+
+[01:36:26] 读取 web_68ed86f6b68c_20260814_013618.report.json:第 8-122 行
+
+[01:36:26] API Agent 第 96 轮
+
+[01:36:48] Agent 调用工具:run_ppt_script
+
+[01:36:48] 运行 svg_quality_checker.py <server>/ppt-web/projects/web_68ed86f6b68c_ppt169_20260814 --stage final
+
+[01:36:49] svg_quality_checker.py 结束:exit=0, 0.85s
+
+[01:36:49] API Agent 第 97 轮
+
+[01:36:54] Agent 调用工具:list_files
+
+[01:36:54] 列出 exports: 3 项
+
+[01:36:54] API Agent 第 98 轮
+
+[01:37:06] Agent 完成;累计 tokens in=10557858, cached=10108416, out=27449
+
+[01:37:06] Agent 最终摘要:### Three-stage strategy summary
+
+
+
+1. **Communication strategy**: English-language executive introduction for Group AI leadership, explaining PPT Generator as an enterprise-grade presentation production system rather than a simple text-to-slides tool.
+
+2. **Solution strategy**: A 10-slide narrative covering source-material contextualization, planning before design, governed agent execution, editable SVG-to-PPTX conversion, three-system architecture, enterprise controls, and strategic value. The deck uses the MT Corporate Blue brand shell, flat PPTX structure, and four generated vector illustrations.
+
+3. **Production strategy**: All slides were authored as editable SVG pages and exported as native DrawingML under `pptx_structure: flat` and `template_reuse_scope: style`. The final package contains 10 slides with no speaker notes; ZIP integrity, slide count, relationships, template tokens, external-image references, and font portability passed. Postflight completed with non-blocking quality 
+
+[01:37:06] 运行 finalize_svg.py projects/web_68ed86f6b68c_ppt169_20260814
+
+[01:37:16] finalize_svg.py 结束:exit=0, 10.04s
+
+[01:37:17] 原生合并完成:web_68ed86f6b68c_20260814_013618_company.pptx(原稿封面/目录 + 正文 8 页,目录填充 8 行,页码按原稿归一化 8 页,封面图 已自动裁切填入)
+
+[01:37:17] 完成:已收集 1 个 PPTX
+
+

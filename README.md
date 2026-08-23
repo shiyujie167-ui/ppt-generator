@@ -155,3 +155,7 @@ data/sample/     mock 模式使用的样例文件
   调整裁剪。合并后执行母版保真度硬校验(原生版式完整、前两页非合成页、封面
   图片关系与裁切正确),不通过则任务判失败,不会下发走样成品。
 - Web 无人值守运行不启动 SVG 实时预览 daemon,避免遗留进程占用端口。
+
+## Public generation evidence
+
+See [showcase/](showcase/) for sanitized server logs and case studies.
