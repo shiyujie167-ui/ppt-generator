@@ -1,6 +1,6 @@
 # PPT Master Web
 
-上传材料 → 选风格与模型 → 无人值守生成可编辑 PPTX。
+上传材料 → 使用 MT 公司最终模板与模型 → 无人值守生成可编辑 PPTX。
 项目直接通过 Responses API 驱动自己的受控 Agent,不依赖 Codex CLI、Claude CLI
 或桌面会话。没有可用 API 配置时自动进入 **mock 演示模式**。
 
@@ -92,15 +92,15 @@ migrate_v2.py      首次建库迁移 + 账号管理命令(adduser/disable/enabl
 runner.py          执行器入口:mock/真实模式分发 + 产物收集
 runner_agent.py    Responses API 多轮工具循环 + 文件/脚本安全边界
 native_company.py  公司模板原生合并:原稿封面/目录 + 生成正文页,纯标准库
-prompts.py         风格选项 + 委托提示词模板
+prompts.py         唯一 MT 模板规则 + 委托提示词模板
 config.py          .env 加载与全局路径
 templates/       前端页面(index.html 生成台 + login.html 登录页 + viewer.html 翻页预览器)
 engine/          内置生成引擎(规则文档 + 脚本 + 模板;MIT 归档,见 engine/NOTICE.md)
 engine/projects/ 每个任务的生成工作区(web_<任务ID>_*)
 data/app.db      SQLite:users / sessions / materials / jobs(文件本体不入库)
 data/library/    每账号一个材料库目录(原件 + 解析 .md),常驻可复用
-data/company/    公司模板原稿 PPTX(原生封面/目录来源)+ cover_preview.png(风格卡真实封面图)
-data/examples/   示例成品画廊(21 个预渲染示例;不入库,见其 README)
+data/company/    MT 公司最终模板原稿 PPTX(原生封面/目录来源)+ cover_preview.png(模板预览图)
+data/examples/   历史示例归档(不再作为产品模板入口,见其 README)
 data/uploads/    每个任务的材料快照(硬链接自材料库,删库不影响历史任务)
 data/outputs/    每个任务的最终 PPTX / 预览图
 data/logs/       每个任务的运行日志
@@ -112,26 +112,25 @@ data/sample/     mock 模式使用的样例文件
 - **三栏交互(NotebookLM 式)**:左栏是账号的**材料库**(上传即入库并后台用
   引擎 source_to_md 解析成 Markdown,常驻、跨设备,可反复用于多次生成);
   中栏基于材料问答(同步单轮模型调用,不进任务队列,秒级返回,可多轮追问)
-  与 PPT 内容配置;右栏模板挑选、模型选择与生成进度。提交生成时把勾选材料
+  与 PPT 内容配置;右栏唯一模板、模型选择与生成进度。提交生成时把勾选材料
   **硬链接快照**进任务目录(零空间开销),此后增删材料不影响已提交任务。
 - **任务队列**:默认串行(一次只跑一个,费用最可控);`.env` 里 `JOB_WORKERS=2-4`
-  可并行跑多个任务(适合同一材料多风格/多模型对比),API 并发与费用同时叠加。
+  可并行跑多个任务(适合同一材料多模型对比),API 并发与费用同时叠加。
 - **超时**:单任务默认 90 分钟(`.env` 里 `JOB_TIMEOUT_MINUTES` 可调)。
 - **费用**:如配置 `PPT_INPUT_USD_PER_M` / `PPT_OUTPUT_USD_PER_M`(以及缓存命中价
   `PPT_CACHED_USD_PER_M`,强烈建议配——缓存占长任务输入的 9 成以上,不配会按输入价虚高约 9 倍),
   任务卡显示估算费用(美元)。
 - **规划确认(默认开启,人工把关)**:提交后先跑轻量规划任务(约 1 分钟)产出
   每页大纲,前端弹出确认面板——可直接编辑(改标题/要点、增删移页)、输入意见让
-  AI 重排(可多轮)、切换风格(跟随模板卡或 AI 建议)与生成模型;确认后才派生
+  AI 重排(可多轮)与生成模型;模板始终固定为 MT 公司最终模板,确认后才派生
   正式生成任务(`mode=plan`、`/replan`、`/confirm-plan`),确认过的大纲以
   「最终页面计划」写入提示词、执行器逐页 1:1 落实。同一大纲可换模型分别生成对
   比。生成台可勾选「跳过确认直接生成」(`mode=direct`)。成品层面的「大面板单
   行填充」启发式检查仅记日志提醒,不再硬性拦截——质量判断交给规划确认与人工验收。
-- **风格**:横向滑动条点选——公司蓝模板与公司蓝·自由版(真实封面预览)+ 21 个示例成品同款
-  (带 `/viewer` 翻页预览;选中后以 custom 风格生成,style_brief 锁定该示例的
-  visual_style 规范文档)。瑞士极简/深色商务/自定义卡已从 UI 移除,风格定义
-  仍在 prompts.STYLES 供接口层兼容。生成阶段提示词声明「三阶段确认全权委托」,
-  中途不会停下来等确认。
+- **模板**:产品只提供一个 MT 公司最终模板,不再提供其他风格卡或示例模板选择。
+  第 1 页为公司原生封面,第 2 页为公司原生目录,第 3 页起固定公司页眉、Logo、
+  页码和页脚,正文区域由 AI 自由排版。历史示例文件仅作归档,不出现在产品入口。
+  生成阶段提示词声明「三阶段确认全权委托」,中途不会停下来等确认。
 - **隔离**:每个真实任务只能写 `engine/projects/web_<任务ID>...`,不能修改模板库、
   skill 代码或其他项目。
 - **工具边界**:Agent 可读取引擎/本任务上传目录,可安装模板到本任务项目,只能通过无
@@ -146,16 +145,12 @@ data/sample/     mock 模式使用的样例文件
   并使用稳定的 prompt cache key,减少长流程里的重复上下文和延迟。
 - **API 重试**:5xx/429/断连/超时自动重试(`PPT_API_RETRIES`,默认 3 次),
   避免长任务因一次瞬时故障整单报废;4xx 配置类错误直接失败。
-- **公司模板保真**:公司蓝任务导出后,`native_company.py` 以
+- **公司模板保真**:MT 公司最终模板任务导出后,`native_company.py` 以
   `COMPANY_TEMPLATE_SOURCE` 原稿为底自动合并——成品第 1、2 页是原稿的原生
   封面/目录页(只按 Agent 写的 `native_fill.json` 替换标题/日期/目录文字),
-  第 3 页起并入生成的正文页并保留公司页眉页脚。勾选 AI 配图时,两种公司蓝
-  风格都会额外生成 `images/company_cover_hero.png`,按原稿顶部约 3.404:1 的
+  第 3 页起并入生成的正文页并保留公司页眉页脚。勾选 AI 配图时,该模板会额外
+  生成 `images/company_cover_hero.png`,按原稿顶部约 3.404:1 的
   图片框自动居中 cover 裁切并填入;原图仍嵌在 PPTX 中,可在 PowerPoint 里继续
   调整裁剪。合并后执行母版保真度硬校验(原生版式完整、前两页非合成页、封面
   图片关系与裁切正确),不通过则任务判失败,不会下发走样成品。
 - Web 无人值守运行不启动 SVG 实时预览 daemon,避免遗留进程占用端口。
-
-## Public generation evidence
-
-See [showcase/](showcase/) for sanitized server logs and case studies.

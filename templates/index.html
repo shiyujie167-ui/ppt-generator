@@ -338,14 +338,14 @@ body.dark .chat-empty svg { filter: brightness(.72) saturate(.85); }
 .sec-label span { color: var(--faint); font-size: 11px; }
 .sec-label .cnt { margin-left: auto; color: var(--faint); font-size: 10.5px; }
 .tpl-block { max-height: 254px; overflow-y: auto; padding: 2px; scrollbar-width: thin; }
-.tpl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tpl-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
 .tpl {
   border: 1.5px solid var(--line); border-radius: 12px;
-  overflow: hidden; background: var(--panel); cursor: pointer;
+  overflow: hidden; background: var(--panel); cursor: default;
   position: relative; transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
   min-width: 0;
 }
-.tpl:hover { border-color: var(--line-2); box-shadow: 0 8px 18px rgba(16,24,40,.08); transform: translateY(-1px); }
+.tpl:hover { border-color: var(--line-2); box-shadow: 0 8px 18px rgba(16,24,40,.08); }
 .tpl.sel { border-color: var(--ink); box-shadow: 0 6px 16px rgba(16,24,40,.12); }
 .tpl.sel::after {
   content: "✓"; position: absolute; top: 6px; right: 6px;
@@ -361,6 +361,12 @@ body.dark .cover-fallback { background: linear-gradient(135deg, #20242c, #262a35
 .tpl-info { padding: 7px 9px 8px; display: flex; align-items: center; gap: 6px; }
 .tpl-info b { flex: 1; min-width: 0; font-size: 11.5px; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tpl-info a { font-size: 10px; color: var(--blue); white-space: nowrap; }
+.fixed-template {
+  min-height: 40px; padding: 10px 12px; border: 1px solid var(--line);
+  border-radius: 9px; background: var(--input-bg); color: var(--text);
+  font-size: 12px; font-weight: 650;
+}
+.fixed-template span { margin-left: 8px; color: var(--faint); font-size: 11px; font-weight: 400; }
 .select-wrap { position: relative; }
 .select-wrap select { height: 40px; appearance: none; padding: 0 34px 0 12px; cursor: pointer; font-size: 12.5px; }
 .select-wrap svg { position: absolute; right: 11px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--faint); pointer-events: none; }
@@ -618,7 +624,7 @@ body.dark .toast { background: rgba(242,244,248,.95); color: #10131a; }
         </div>
       </div>
       <div class="field">
-        <label for="noteInput">补充要求 <span>受众、重点、自定义风格描述等</span></label>
+        <label for="noteInput">补充要求 <span>受众、重点、内容侧重点等</span></label>
         <div class="input-wrap">
           <textarea id="noteInput" maxlength="300" placeholder="例如:给管理层看,突出总价和风险项"></textarea>
           <small class="ta"><span id="noteCount">0</span>/300</small>
@@ -668,7 +674,7 @@ body.dark .toast { background: rgba(242,244,248,.95); color: #10131a; }
       <span class="status-dot" id="statusDot">…</span>
     </div>
     <div class="panel-body studio-body">
-      <div class="sec-label"><b>选择模板</b><span>点击一张,生成严格执行</span></div>
+      <div class="sec-label"><b>使用模板</b><span>MT 公司最终模板（唯一）</span></div>
       <div class="tpl-block"><div class="tpl-grid" id="tplGrid">加载中…</div></div>
 
       <div class="field">
@@ -684,7 +690,7 @@ body.dark .toast { background: rgba(242,244,248,.95); color: #10131a; }
       </button>
       <p class="estimate" id="estimateText">串行队列逐个执行</p>
       <label class="skip-line"><input type="checkbox" class="srccheck" id="skipPlan">跳过确认直接生成</label>
-      <label class="skip-line" id="aiImagesLine" hidden title="公司模板会必生封面顶部横幅并自动裁切；其他风格为封面/章节页/关键框架图生成插图，单任务通常约 3-6 张，按张计费"><input type="checkbox" class="srccheck" id="aiImages">AI 生成配图（公司模板含封面横幅） · <span id="aiImagesModel"></span></label>
+      <label class="skip-line" id="aiImagesLine" hidden title="MT 公司模板会生成封面顶部横幅并自动裁切，按张计费"><input type="checkbox" class="srccheck" id="aiImages">AI 生成配图（含封面横幅） · <span id="aiImagesModel"></span></label>
 
       <div class="divider"></div>
       <div class="sec-label"><b>生成进度</b><span class="cnt" id="jobCount"></span></div>
@@ -748,10 +754,13 @@ $('#tabHist').onclick = () => {
 };
 
 // ── 配置 ────────────────────────────────────────────
-let modelList = [], mockMode = false, styleLabels = {};
+let modelList = [], mockMode = false;
+let finalStyleValue = 'company_free';
+let finalTemplateId = '__company__';
 api('api/config').then(r=>r.json()).then(c=>{
   modelList = c.models || []; mockMode = !!c.mock;
-  styleLabels = Object.fromEntries((c.styles || []).map(s => [s.value, s.label]));
+  finalStyleValue = c.final_style || 'company_free';
+  finalTemplateId = c.final_template_id || '__company__';
   if (c.user) { $('#avatar').textContent = c.user.slice(0, 1).toUpperCase(); $('#avatar').title = c.user; }
   const dot = $('#statusDot');
   if (c.mock) {
@@ -987,25 +996,24 @@ async function sendChat(){
   }
 }
 
-// ── 右栏:风格模板 ───────────────────────────────────
+// ── 右栏:唯一 MT 模板 ───────────────────────────────
 let selectedStyle = '__company__';
 function tplCover(c){
   if (c.cover) return `<img src="${esc(c.cover)}" loading="lazy" alt="${esc(c.styleName)}">`;
   return `<div class="cover-fallback"><svg viewBox="0 0 24 24" style="width:20px;height:20px"><path d="m12 3 1.3 4.1L17 9l-3.7 1.9L12 15l-1.3-4.1L7 9l3.7-1.9L12 3Z"></path></svg></div>`;
 }
 api('api/styles').then(r=>r.json()).then(cards=>{
+  // 产品只展示唯一的 MT 最终模板；即使旧服务返回了历史卡片，也不要在 UI 暴露。
+  cards = (Array.isArray(cards) ? cards : [])
+    .filter(c => c.example_id === finalTemplateId)
+    .slice(0, 1);
+  if (cards[0]) selectedStyle = cards[0].example_id;
   $('#tplGrid').innerHTML = cards.map(c => `
     <div class="tpl ${c.example_id===selectedStyle?'sel':''}" data-id="${esc(c.example_id)}" title="${esc(c.description)}">
       <div class="tpl-cover">${tplCover(c)}</div>
       <div class="tpl-info"><b>${esc(c.styleName||c.title)}</b>
       ${c.viewer?`<a href="${esc(c.viewer)}" target="_blank" onclick="event.stopPropagation()">预览 ↗</a>`:''}</div>
     </div>`).join('');
-  document.querySelectorAll('.tpl').forEach(el=>{
-    el.onclick = () => {
-      selectedStyle = el.dataset.id;
-      document.querySelectorAll('.tpl').forEach(x=>x.classList.toggle('sel', x===el));
-    };
-  });
 });
 
 // ── 右栏:提交生成 ───────────────────────────────────
@@ -1063,17 +1071,10 @@ function openPlanModal(id){
   if (!j || j.kind !== 'plan') { toast('规划任务不存在'); return; }
   if (j.status !== 'done') { toast(j.status === 'failed' ? '规划任务失败,请重新提交' : '规划还在进行中,完成后会自动弹出'); return; }
   planOpenId = id;
-  const p = j.plan || {}, outline = p.outline || [], ai = p.styles || [];
-  const parentLabel = j.style_brief ? j.style_brief.split(':')[0] : (styleLabels[j.style] || j.style);
-  const opts = [
-    `<option value="parent">跟随所选模板:${esc(parentLabel)}</option>`,
-    ...ai.map((s,i)=>`<option value="ai:${i}">AI 建议:${esc(s.name)}</option>`),
-  ].join('');
+  const p = j.plan || {}, outline = p.outline || [];
   $('#planBody').innerHTML = `
-    <div class="field"><label>风格</label>
-      <div class="select-wrap"><select class="stylesel" onchange="planStyleDesc()">${opts}</select>
-        <svg viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"></path></svg></div>
-      <div class="fbhist styledesc"></div></div>
+    <div class="field"><label>模板</label>
+      <div class="fixed-template">MT 公司最终模板<span>封面、目录、页眉页脚固定；正文自由排版</span></div></div>
     <div class="field"><label>每页内容分布 <span>共 <b class="pcount">${outline.length}</b> 页 · 要点一行一条 · 可增删/排序</span></label>
       <div class="plist">${outline.map((pg,i)=>prowHtml(i, pg.title, pg.points)).join('')}</div>
       <button class="padd" type="button" onclick="planAddPage()">＋ 添加一页</button></div>
@@ -1091,13 +1092,6 @@ function openPlanModal(id){
 }
 function closePlanModal(){ planOpenId = null; $('#planMask').hidden = true; }
 $('#planClose').onclick = closePlanModal;
-function planStyleDesc(){
-  const j = lastJobs.find(x => x.id === planOpenId);
-  if (!j) return;
-  const v = document.querySelector('#planBody .stylesel').value;
-  document.querySelector('#planBody .styledesc').textContent =
-    v.startsWith('ai:') ? ((((j.plan||{}).styles)||[])[+v.slice(3)]||{}).description || '' : '';
-}
 function renumberPlan(){
   const rows = document.querySelectorAll('#planBody .prow');
   rows.forEach((r,i)=>r.querySelector('.pnum').textContent = i+1);
@@ -1144,7 +1138,7 @@ async function planConfirm(id, btn){
   const outline = readOutline();
   if (!outline.length) { toast('大纲不能为空(每页需要标题)'); return; }
   const fd = new FormData();
-  fd.append('style', document.querySelector('#planBody .stylesel').value);
+  fd.append('style', finalStyleValue);
   fd.append('model', document.querySelector('#planFoot .modelsel')?.value || '');
   fd.append('outline', JSON.stringify(outline));
   btn.disabled = true;

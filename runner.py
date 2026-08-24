@@ -5,6 +5,7 @@ from pathlib import Path
 
 import config
 import jobs
+import prompts
 
 
 def log_path(job_id: str) -> Path:
@@ -17,6 +18,14 @@ def _log(job_id: str, text: str) -> None:
 
 
 def run_job(job: jobs.Job) -> None:
+    # 队列里可能还有迁移前的旧任务；执行前把它们统一到唯一 MT 模板，
+    # 这样 mock、规划、推荐和真实生成四条路径的任务状态都一致。
+    canonical_style = prompts.normalize_style(getattr(job, "style", "")) or prompts.FINAL_STYLE
+    if getattr(job, "style", "") != canonical_style or getattr(job, "style_brief", ""):
+        jobs.update(job, style=canonical_style, style_brief="")
+    else:
+        job.style = canonical_style
+        job.style_brief = ""
     kind = {"recommend": "风格推荐", "plan": "内容规划"}.get(job.kind, "生成")
     _log(job.id, f"任务开始({kind};{'mock 演示' if job.mock else '真实运行'};模型:{job.model or '默认'})")
     if job.mock:
@@ -63,20 +72,17 @@ def _run_mock(job: jobs.Job) -> None:
 
 
 def _run_mock_recommend(job: jobs.Job) -> None:
-    import prompts  # noqa: PLC0415
-
     _log(job.id, "浏览材料,分析内容气质与受众…")
     time.sleep(4)
-    _log(job.id, "生成 4 个候选风格(演示数据;真实模式会按材料定制)")
+    _log(job.id, "确认 MT 公司最终模板(唯一模板;演示数据)")
     time.sleep(2)
-    jobs.update(job, status="done", recommendations=prompts.MOCK_RECOMMENDATIONS,
+    jobs.update(job, status="done",
+                recommendations=[dict(prompts.MOCK_RECOMMENDATIONS[0])],
                 cost_usd=0.0, finished_at=time.time())
-    _log(job.id, "完成:请在任务卡片里选择一个风格开始生成")
+    _log(job.id, "完成:唯一 MT 公司最终模板已就绪")
 
 
 def _run_mock_plan(job: jobs.Job) -> None:
-    import prompts  # noqa: PLC0415
-
     if job.plan_feedback:
         _log(job.id, f"按调整意见修订大纲(演示数据,意见:{job.plan_feedback[-1][:60]})")
         time.sleep(3)
@@ -84,9 +90,14 @@ def _run_mock_plan(job: jobs.Job) -> None:
     else:
         _log(job.id, "浏览材料,分析内容结构与受众…")
         time.sleep(4)
-        _log(job.id, "规划风格方向与每页内容分布(演示数据;真实模式会按材料定制)")
+        _log(job.id, "规划唯一 MT 公司模板与每页内容分布(演示数据;真实模式会按材料定制)")
         time.sleep(2)
-        plan = prompts.MOCK_PLAN
+        plan = dict(prompts.MOCK_PLAN)
+    # 历史规划结果可能携带旧的多风格列表；修订/回放时也必须只保留这一项。
+    plan["styles"] = [dict(prompts.MOCK_RECOMMENDATIONS[0])]
+    if isinstance(plan.get("outline"), list):
+        plan["outline"] = [dict(page) for page in plan["outline"]]
+        plan["pages"] = len(plan["outline"])
     jobs.update(job, status="done", plan=plan, cost_usd=0.0, finished_at=time.time())
     _log(job.id, "完成:请在任务卡片里确认大纲(可直接编辑或让 AI 调整),然后开始生成")
 
