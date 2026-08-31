@@ -29,10 +29,8 @@ class Job:
     user_id: int = 0        # 归属账号(users.id);0 = 未迁移的历史遗留
     status: str = "queued"  # queued | running | done | failed
     kind: str = "generate"  # generate | recommend | plan
-    # 唯一产品模板的内部兼容 ID。历史任务可能仍带 company 等旧值，
-    # 真实执行入口会再次归一化；新建 Job 默认直接落到最终模板。
-    style: str = "company_free"
-    style_brief: str = ""   # 历史兼容字段；唯一模板任务始终留空
+    style: str = "company"
+    style_brief: str = ""   # 采纳的推荐风格描述(选自 recommend 结果时填)
     pages: str = "auto"
     topic: str = ""
     note: str = ""

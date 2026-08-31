@@ -1,7 +1,5 @@
-# 机密:环境文件含 API token,绝不入库(示例文件除外)
+# 机密:.env 含 API token,绝不入库
 .env
-.env.*
-!.env.example
 
 # Python / macOS
 __pycache__/
@@ -19,12 +17,6 @@ data/jobs.json*
 data/server.log
 data/server.out
 data/qa/
-data/*.db
-data/*.sqlite
-data/*.sqlite3
-
-# 本地检查/渲染临时目录
-.tmp_*/
 
 # 示例成品画廊(约 75MB 预渲染 SVG,来源与重建方法见 data/examples/README.md;不入库)
 data/examples/*

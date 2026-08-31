@@ -19,7 +19,6 @@ in: cwd, skill dir, clone repo root, ~/.ppt-master/.env):
   OPENAI_MODEL             optional default model (per-item model wins)
   OPENAI_SIZE_PRESET       auto | gpt-image | gpt-image-2 | legacy | dall-e-2
   OPENAI_RESPONSE_FORMAT   auto | b64_json | url | omit
-  OPENAI_OUTPUT_FORMAT     auto | png | jpeg | webp
   OPENAI_QUALITY           auto | omit | low | medium | high | standard | hd
   IMAGE_CONCURRENCY        manifest-mode default concurrency (CLI wins)
 """
@@ -46,7 +45,6 @@ REPO_ROOT = SKILL_DIR.parent.parent
 REQUEST_TIMEOUT = 300
 ITEM_MAX_ATTEMPTS = 3
 SIZE_NAMES = {"512px", "1K", "2K", "4K"}
-OUTPUT_FORMATS = {"png", "jpeg", "webp"}
 IMAGE_MAGIC = (b"\x89PNG", b"\xff\xd8", b"RIFF", b"GIF8")
 PAGE_ROLES = {"local", "hero_page"}
 TEXT_POLICIES = {"none", "embedded"}
@@ -123,7 +121,6 @@ class Backend:
         self.model = model_override or os.environ.get("OPENAI_MODEL", "").strip()
         self.size_preset = os.environ.get("OPENAI_SIZE_PRESET", "auto").strip().lower() or "auto"
         self.response_format = os.environ.get("OPENAI_RESPONSE_FORMAT", "auto").strip().lower() or "auto"
-        self.output_format = os.environ.get("OPENAI_OUTPUT_FORMAT", "auto").strip().lower() or "auto"
         self.quality = os.environ.get("OPENAI_QUALITY", "auto").strip().lower() or "auto"
         self.ssl_context = _ssl_context()
 
@@ -171,10 +168,8 @@ class Backend:
             payload["quality"] = self.quality
         if self.response_format in ("b64_json", "url"):
             payload["response_format"] = self.response_format
-        if self.output_format in OUTPUT_FORMATS:
-            payload["output_format"] = self.output_format
 
-        # Compatibility ladder: size -> "auto" -> omit; then drop optional fields.
+        # Compatibility ladder: size -> "auto" -> omit; then drop response_format.
         attempts = [dict(payload)]
         step = dict(payload)
         step["size"] = "auto"
@@ -197,9 +192,6 @@ class Backend:
                     continue
                 if "response_format" in lowered and "response_format" in body:
                     trimmed = {k: v for k, v in body.items() if k != "response_format"}
-                    return self._post(trimmed)
-                if "output_format" in lowered and "output_format" in body:
-                    trimmed = {k: v for k, v in body.items() if k != "output_format"}
                     return self._post(trimmed)
                 if "quality" in lowered and "quality" in body:
                     trimmed = {k: v for k, v in body.items() if k != "quality"}
@@ -548,8 +540,7 @@ def run_single(args: argparse.Namespace) -> int:
 
 def list_backends() -> int:
     print("openai  (Core) — OpenAI 兼容 /v1/images/generations;env: OPENAI_API_KEY / "
-          "OPENAI_BASE_URL / OPENAI_MODEL / OPENAI_SIZE_PRESET / OPENAI_RESPONSE_FORMAT / "
-          "OPENAI_OUTPUT_FORMAT / OPENAI_QUALITY")
+          "OPENAI_BASE_URL / OPENAI_MODEL / OPENAI_SIZE_PRESET / OPENAI_RESPONSE_FORMAT / OPENAI_QUALITY")
     print("其余 provider 后端(gemini/zhipu/…)本构建未随附;OpenAI 兼容中转一律走 openai。")
     return 0
 

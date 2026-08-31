@@ -1124,11 +1124,8 @@ def _parse_recommendations(text: str) -> list[dict[str, str]]:
         data = json.loads(candidate[start:end + 1])
     except json.JSONDecodeError as exc:
         raise AgentError(f"风格推荐 JSON 无法解析:{exc}") from exc
-    # 产品层现在只有一个可选模板。仍然要求模型返回数组，便于兼容旧的
-    # recommend 协议，但数组必须恰好只有一项，避免历史四风格结果重新
-    # 渗透到模板选择器或后续任务。
-    if not isinstance(data, list) or len(data) != 1:
-        raise AgentError("风格推荐必须恰好包含 1 项（MT 公司最终模板）")
+    if not isinstance(data, list) or len(data) != 4:
+        raise AgentError("风格推荐必须恰好包含 4 项")
     result = []
     for item in data:
         if not isinstance(item, dict):
@@ -1137,12 +1134,7 @@ def _parse_recommendations(text: str) -> list[dict[str, str]]:
         description = str(item.get("description", "")).strip()
         if not name or not description:
             raise AgentError("风格推荐缺少 name 或 description")
-        # 名称是产品固定值；描述可以保留模型针对材料给出的说明，但不
-        # 允许模型借此引入另一套模板名称。
-        result.append({
-            "name": prompts.FINAL_TEMPLATE_LABEL,
-            "description": description[:800],
-        })
+        result.append({"name": name[:40], "description": description[:800]})
     return result
 
 
@@ -1161,10 +1153,19 @@ def _parse_plan(text: str, fallback_styles: list[dict] | None = None) -> dict[st
     if not isinstance(data, dict):
         raise AgentError("内容规划结果格式错误")
 
-    # 规划结果中的 styles 仅为历史协议字段。无论模型返回几项、是否
-    # 省略，产品始终使用唯一的 MT 公司最终模板；复制一份避免调用方
-    # 修改 prompts.MOCK_RECOMMENDATIONS 的全局对象。
-    styles = [dict(prompts.MOCK_RECOMMENDATIONS[0])]
+    styles = []
+    for item in data.get("styles") or []:
+        if not isinstance(item, dict):
+            continue
+        name = str(item.get("name", "")).strip()
+        description = str(item.get("description", "")).strip()
+        if name and description:
+            styles.append({"name": name[:40], "description": description[:800]})
+    if not styles:
+        # 修订轮允许模型省略 styles,沿用上一版
+        styles = list(fallback_styles or [])
+    if not styles:
+        raise AgentError("内容规划缺少可用的风格建议")
 
     raw_outline = data.get("outline")
     if not isinstance(raw_outline, list) or not raw_outline:
@@ -1182,7 +1183,7 @@ def _parse_plan(text: str, fallback_styles: list[dict] | None = None) -> dict[st
         outline.append({"title": title[:60], "points": points[:8]})
 
     return {
-        "styles": styles,
+        "styles": styles[:4],
         "pages": len(outline),
         "outline": outline,
         "notes": str(data.get("notes", "")).strip()[:300],
@@ -1644,19 +1645,6 @@ def run(job: jobs.Job, log: LogFn) -> None:
     started = time.time()
     agent: ResponsesAgent | None = None
     try:
-        # 所有新旧任务在真正执行前统一落到唯一模板。旧数据库里可能仍有
-        # company、swiss 等历史 style，或残留已被废弃的 style_brief；清掉
-        # 它们可以避免续跑时把旧风格提示再次带进生成 prompt。底层
-        # company/company_free 分支仍保留给直接调用的兼容测试。
-        original_style = getattr(job, "style", "")
-        canonical_style = prompts.normalize_style(original_style) or prompts.FINAL_STYLE
-        had_style_brief = bool(getattr(job, "style_brief", ""))
-        if original_style != canonical_style or had_style_brief:
-            jobs.update(job, style=canonical_style, style_brief="")
-        else:
-            # 即使值没有变化，也确保后续代码和 resume 路径只看到规范值。
-            job.style = canonical_style
-            job.style_brief = ""
         if bool(getattr(job, "ai_images", False)):
             image_ready, image_reason = config.image_gen_ready()
             if not image_ready:
@@ -1772,7 +1760,7 @@ def run(job: jobs.Job, log: LogFn) -> None:
 
 
 def recommend(job: jobs.Job, log: LogFn) -> None:
-    """Recommend the single MT company template without creating a PPT project."""
+    """Recommend four styles without creating a PPT project."""
     agent, _ = _new_agent(job, log)
     upload_dir = config.UPLOADS_DIR / (job.upload_id or job.id)
     prompt = prompts.build_recommend_prompt(
@@ -1791,13 +1779,13 @@ def recommend(job: jobs.Job, log: LogFn) -> None:
             cost_usd=_cost_usd(agent),
             finished_at=time.time(),
         )
-        log(job.id, "完成:已确认 MT 公司最终模板（唯一模板）")
+        log(job.id, "完成:已生成 4 个材料定制风格")
     except Exception as exc:  # noqa: BLE001
         _fail(job, log, exc)
 
 
 def plan(job: jobs.Job, log: LogFn) -> None:
-    """Plan the fixed MT template plus a per-page content outline."""
+    """Plan styles plus a per-page content outline without creating a PPT project."""
     agent, _ = _new_agent(job, log)
     upload_dir = config.UPLOADS_DIR / (job.upload_id or job.id)
     feedback = job.plan_feedback[-1] if job.plan_feedback else ""

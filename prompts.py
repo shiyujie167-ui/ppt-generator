@@ -4,46 +4,12 @@ from pathlib import Path
 
 import config
 
-# 产品现在只提供一套最终 MT 模板。旧任务/旧客户端的 style 值只在边界处
-# 归一化，不能再让它们重新暴露成可选风格。
-FINAL_STYLE = "company_free"
-FINAL_TEMPLATE_ID = "__company__"
-FINAL_TEMPLATE_LABEL = "MT 公司最终模板"
-_LEGACY_STYLE_ALIASES = {
-    "company": FINAL_STYLE,
-    "company_free": FINAL_STYLE,
-    "mt_corporate_blue": FINAL_STYLE,
-    "swiss": FINAL_STYLE,
-    "dark": FINAL_STYLE,
-    "custom": FINAL_STYLE,
-}
-_LEGACY_TEMPLATE_ALIASES = {
-    "__company__": FINAL_STYLE,
-    "__company_free__": FINAL_STYLE,
-}
-
-
-def normalize_style(value: str | None, *, default: str = FINAL_STYLE) -> str | None:
-    """把历史 style 归一化为唯一模板；未知值返回 None。"""
-    raw = str(value or "").strip()
-    if not raw:
-        return default
-    return _LEGACY_STYLE_ALIASES.get(raw)
-
-
-def style_for_template_id(value: str | None) -> str | None:
-    """把历史模板卡 ID 归一化；示例画廊不再是模板入口。"""
-    raw = str(value or "").strip()
-    if not raw:
-        return FINAL_STYLE
-    return _LEGACY_TEMPLATE_ALIASES.get(raw)
-
 # mock 模式下「AI 推荐风格」返回的演示数据(真实模式由 agent 根据材料定制)。
 MOCK_RECOMMENDATIONS = [
-    {
-        "name": FINAL_TEMPLATE_LABEL,
-        "description": "MT 原生封面与目录；第 3 页起固定公司页眉、Logo、页码和页脚，正文由 AI 自由排版。",
-    },
+    {"name": "公司蓝模板", "description": "沿用公司 mt_corporate_blue 模板:蓝白主调、原生封面与目录。正式汇报的默认安全牌。(演示数据,配 key 后按你的材料定制推荐)"},
+    {"name": "瑞士极简", "description": "白底大留白、克制的公司蓝点缀,信息密度低、阅读负担小,适合管理层快速过目。"},
+    {"name": "数据仪表盘", "description": "深浅分区 + 大数字卡片 + 图表优先,适合报价对比、费用构成这类数字密集的材料。"},
+    {"name": "深色高对比", "description": "深蓝黑背景、亮色强调,投影环境显眼,适合会议室大屏演示场景。"},
 ]
 
 # mock 模式下「规划确认」返回的演示数据(真实模式由 agent 根据材料定制)。
@@ -66,14 +32,22 @@ MOCK_PLAN = {
 }
 
 
-# 上传表单里的唯一模板选项。key 与任务内部 style 一致。
+# 上传表单里的风格选项。key 与前端 <select> 的 value 一致。
 STYLES = {
-    FINAL_STYLE: {
-        "label": FINAL_TEMPLATE_LABEL,
+    "company": {
+        "label": "公司蓝模板(上午同款,推荐)",
         "brief": (
-            "只使用 MT 公司最终模板工作区 {template}，不要选择或创建其他模板。"
-            "第 1 页使用公司原生封面，第 2 页使用公司原生目录；第 3 页起固定公司品牌壳，"
-            "包括蓝渐变页眉、白色标题、Logo、分隔线、不补零页码和保密页脚，正文区域自由设计。"
+            "使用模板工作区 {template} 生成(显式模板工作区根目录,走 Generate 路线 Step 3)。"
+            "封面、目录与内容页均沿用该公司模板的版式与配色。"
+            "成品的第 1、2 页最终由系统替换为公司模板原稿的原生封面与目录页。"
+        ),
+    },
+    "company_free": {
+        "label": "公司蓝 · 自由版(色板/字体/页眉固定,其余全自由)",
+        "brief": (
+            "使用模板工作区 {template} 生成(显式模板工作区根目录,走 Generate 路线 Step 3)。"
+            "成品的第 1、2 页最终由系统替换为公司模板原稿的原生封面与目录页。"
+            "正文页(第 3 页起)只有三项硬约束——"
             "本任务是品牌壳引用,不是结构化模板复刻:spec_lock.md 的 pptx_structure "
             "必须使用 mode: flat 和 template_reuse_scope: style,禁止写 structured 或 page_layouts;"
             "SVG 中也不得写 data-pptx-master/layout/layer 等 Master/Layout 结构元数据;"
@@ -93,6 +67,18 @@ STYLES = {
             "不使用卡通、3D 或过度装饰。"
         ),
     },
+    "swiss": {
+        "label": "瑞士极简(白底,自由设计)",
+        "brief": "不使用模板工作区,自由设计,视觉风格 swiss-minimal:白底、大量留白、公司蓝 #004696 作为主色。",
+    },
+    "dark": {
+        "label": "深色商务(自由设计)",
+        "brief": "不使用模板工作区,自由设计,深色商务风格:深蓝黑背景、亮色强调、适合投影汇报。",
+    },
+    "custom": {
+        "label": "自定义(在补充要求里描述)",
+        "brief": "不使用模板工作区,风格按下方「补充要求」中的描述执行;若描述不足,按稳重的商务风格补全。",
+    },
 }
 
 
@@ -111,19 +97,18 @@ def _material_block(upload_dir: Path, files: list[str], topic: str) -> str:
 
 
 def build_recommend_prompt(*, upload_dir: Path, files: list[str], topic: str) -> str:
-    """兼容旧接口:确认唯一 MT 模板，不再推荐多个风格。"""
+    """轻量任务:读材料 → 推荐若干风格方向,JSON 输出。不生成任何页面。"""
     return f"""请快速完成一个轻量任务,不要生成 PPT,不要初始化项目,不要进入 ppt-master 的生成流程。
 
 【材料】
 {_material_block(upload_dir, files, topic)}
 
 【任务】
-快速浏览材料(转换或抽样阅读即可),确认唯一的「{FINAL_TEMPLATE_LABEL}」适合本次内容。
-不要提出其他风格、其他模板或自由设计方案。
+快速浏览材料(转换或抽样阅读即可),判断内容气质与受众,然后提出 4 个适合这份材料的 PPT 视觉风格方向。其中第 1 个固定为「公司蓝模板(沿用 {config.COMPANY_TEMPLATE} 模板工作区)」,其余 3 个自由发挥(配色、版式气质、适用理由都要具体到这份材料,不要泛泛而谈)。
 
 【输出格式】
-最终回复只输出一个 JSON 数组,不要其他文字，只能包含一个模板:
-[{{"name": "{FINAL_TEMPLATE_LABEL}", "description": "MT 原生封面与目录；第 3 页起固定公司品牌壳，正文自由排版"}}]
+最终回复只输出一个 JSON 数组,不要其他文字,形如:
+[{{"name": "风格名(8字内)", "description": "两三句话:配色/版式/为什么适合这份材料"}}, ...]
 """
 
 
@@ -145,12 +130,12 @@ def build_plan_prompt(*, upload_dir: Path, files: list[str], topic: str, pages: 
 {feedback}
 
 【任务】
-按用户意见调整上一版方案:意见没有涉及的页面尽量保持原样(标题与要点原文保留),只改动意见涉及的部分;需要增删页时同步调整目录页要点与总页数。styles 必须保持唯一的 MT 公司最终模板。"""
+按用户意见调整上一版方案:意见没有涉及的页面尽量保持原样(标题与要点原文保留),只改动意见涉及的部分;需要增删页时同步调整目录页要点与总页数。styles 保持上一版不变。"""
     else:
         revision_block = f"""
 【任务】
 1. 快速浏览材料(转换或抽样阅读即可),判断内容气质、受众与信息结构。
-2. 模板固定为「{FINAL_TEMPLATE_LABEL}」，不要推荐其他视觉方向。
+2. 提出 4 个适合这份材料的视觉风格方向,第 1 个固定为「公司蓝模板(沿用 {config.COMPANY_TEMPLATE} 模板工作区)」,其余 3 个自由发挥(配色、版式气质、适用理由要具体到这份材料)。
 3. 规划每一页的内容分布:{page_req}第 1 页固定为封面、第 2 页固定为目录;每页给出页标题和 2-4 条内容要点(要点要具体到会放什么信息,不要写「介绍一下」这类空话)。"""
 
     return f"""请快速完成一个轻量规划任务,不要生成 PPT 页面,不要初始化项目,不要进入生成流程。
@@ -161,7 +146,7 @@ def build_plan_prompt(*, upload_dir: Path, files: list[str], topic: str, pages: 
 
 【输出格式】
 最终回复只输出一个 JSON 对象,不要其他文字,形如:
-{{"styles": [{{"name": "{FINAL_TEMPLATE_LABEL}", "description": "MT 原生封面与目录；第 3 页起固定公司品牌壳，正文自由排版"}}],
+{{"styles": [{{"name": "风格名(8字内)", "description": "两三句话:配色/版式/为什么适合"}}, ...共4项],
  "pages": 总页数,
  "outline": [{{"title": "页标题", "points": ["要点1", "要点2"]}}, ...每页一项,与 pages 数量一致],
  "notes": "一句话说明规划思路(可选)"}}
@@ -171,10 +156,14 @@ def build_plan_prompt(*, upload_dir: Path, files: list[str], topic: str, pages: 
 def build_prompt(*, style: str, pages: str, note: str, upload_dir: Path, files: list[str], topic: str,
                  style_brief: str = "", outline: list[dict] | None = None,
                  ai_images: bool = False) -> str:
-    # style_brief 仅为历史任务字段；产品现在始终执行唯一 MT 模板，
-    # 防止旧示例/旧推荐把生成重新带回其他风格。
-    canonical_style = normalize_style(style) or FINAL_STYLE
-    style_text = STYLES[canonical_style]["brief"].format(template=config.COMPANY_TEMPLATE)
+    if style_brief:
+        style_text = (
+            f"采用用户选定的风格:{style_brief}\n"
+            f"若该风格提到公司蓝模板,使用模板工作区 {config.COMPANY_TEMPLATE}(显式模板工作区根目录,走 Generate 路线 Step 3);否则自由设计并严格贴合上述描述。"
+        )
+    else:
+        style_conf = STYLES.get(style, STYLES["company"])
+        style_text = style_conf["brief"].format(template=config.COMPANY_TEMPLATE)
 
     material = _material_block(upload_dir, files, topic)
     if outline:

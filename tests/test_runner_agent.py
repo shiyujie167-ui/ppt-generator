@@ -17,28 +17,6 @@ import runner
 import runner_agent
 
 
-class SingleTemplateParsingTest(unittest.TestCase):
-    def test_recommendations_accept_only_one_canonical_template(self) -> None:
-        result = runner_agent._parse_recommendations(
-            '[{"name":"历史 Swiss 风格","description":"材料适配说明"}]'
-        )
-        self.assertEqual(len(result), 1)
-        self.assertEqual(result[0]["name"], prompts.FINAL_TEMPLATE_LABEL)
-
-        with self.assertRaises(runner_agent.AgentError):
-            runner_agent._parse_recommendations(
-                '[{"name":"A","description":"a"},{"name":"B","description":"b"}]'
-            )
-
-    def test_plan_styles_are_always_the_single_mock_template(self) -> None:
-        result = runner_agent._parse_plan(
-            '{"styles":[{"name":"旧模板","description":"旧说明"}],'
-            '"outline":[{"title":"页面一","points":[]}]}'
-        )
-        self.assertEqual(result["styles"], [prompts.MOCK_RECOMMENDATIONS[0]])
-        self.assertEqual(len(result["styles"]), 1)
-
-
 class ToolBoxProjectPathTest(unittest.TestCase):
     def setUp(self) -> None:
         self.temp_dir = tempfile.TemporaryDirectory()

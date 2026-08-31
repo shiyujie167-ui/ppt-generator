@@ -38,31 +38,54 @@ _COMPANY_COVER_PNG = config.BUNDLED_DATA_DIR / "company" / "cover_preview.png"
 _COMPANY_COVER_URL = ("company/cover.png" if _COMPANY_COVER_PNG.is_file()
                       else "repo/decks/mt_corporate_blue/templates/01_cover.svg")
 
-# 产品现在只有一个可选模板。模板常量和历史值归一化规则统一由 prompts.py
-# 维护，避免前端入口、任务接口和 Agent 提示词各写一份。
-FINAL_TEMPLATE_ID = prompts.FINAL_TEMPLATE_ID
-FINAL_STYLE = prompts.FINAL_STYLE
-FINAL_STYLE_LABEL = prompts.FINAL_TEMPLATE_LABEL
-
 COMPANY_STYLE_CARD = {
-    "example_id": FINAL_TEMPLATE_ID,
-    "styleName": FINAL_STYLE_LABEL,
-    "title": FINAL_STYLE_LABEL,
-    "description": "原生封面与目录、固定公司页眉页脚，正文由 AI 在公司品牌范围内自由排版",
+    "example_id": "__company__",
+    "styleName": "公司蓝模板",
+    "title": "上午同款 · mt_corporate_blue",
+    "description": "公司蓝白主调,原生封面与目录,正式汇报默认选择",
     "cover": _COMPANY_COVER_URL,
     "viewer": "",
     "group": "builtin",
 }
 
 
-# 只有这一张卡会出现在 /api/styles。旧卡片 ID 的归一化由 prompts.py 负责，
-# 避免用户在旧页面提交时意外落到已下线的风格。
-STYLE_CARDS = [COMPANY_STYLE_CARD]
+# 内置卡:公司蓝(固定骨架)+ 公司蓝自由版(品牌壳固定、版面自由);
+# 瑞士/深色/自定义已从 UI 移除(prompts.STYLES 仍保留定义,供旧任务与接口层兼容)。
+STYLE_CARDS = [
+    COMPANY_STYLE_CARD,
+    {
+        "example_id": "__company_free__",
+        "styleName": "公司蓝 · 自由版",
+        "title": "同款封面页眉 · 版面自由设计",
+        "description": "品牌壳与公司蓝完全一致(原生封面/目录、蓝渐变页眉、保密页脚、公司九色板),正文版面不套固定骨架、每页自由构图,更有设计感",
+        "cover": _COMPANY_COVER_URL,
+        "viewer": "",
+        "group": "builtin",
+    },
+]
+_CARD_TO_STYLE = {"__company__": "company", "__company_free__": "company_free",
+                  "__style_swiss__": "swiss", "__style_dark__": "dark", "__style_custom__": "custom"}
 
-# 示例文件仍保留在磁盘上供历史任务归档，但不再加载、挂载或作为产品入口展示。
+# 示例成品画廊(可选):data/examples/ 裁剪自上游 ppt-master 示例(预渲染 SVG,
+# 详见 data/examples/README.md);目录缺失时自动降级为只有内置两张风格卡。
 EXAMPLES_DIR = config.BUNDLED_DATA_DIR / "examples"
 EXAMPLES: list[dict] = []
-EXAMPLE_CARDS: list[dict] = []
+if (EXAMPLES_DIR / "examples.json").is_file():
+    EXAMPLES = json.loads((EXAMPLES_DIR / "examples.json").read_text(encoding="utf-8")).get("examples", [])
+    app.mount("/examples", StaticFiles(directory=str(EXAMPLES_DIR)), name="examples")
+
+EXAMPLE_CARDS = [
+    {
+        "example_id": f"ex:{e['id']}",
+        "styleName": e["styleName"],
+        "title": f"{e['title']} · {e['pages']} 页",
+        "description": e["description"],
+        "cover": f"examples/{e['id']}/{e['cover']}",
+        "viewer": f"viewer?id={e['id']}",
+        "group": "example",
+    }
+    for e in EXAMPLES
+]
 
 ALLOWED_EXT = {".pdf", ".docx", ".doc", ".pptx", ".xlsx", ".xls", ".md", ".txt", ".csv", ".png", ".jpg", ".jpeg", ".html"}
 MAX_FILE_MB = 50
@@ -212,7 +235,7 @@ def index(ppt_session: str = Cookie("")):
 
 @app.get("/viewer", response_class=HTMLResponse)
 def viewer(ppt_session: str = Cookie("")):
-    """历史示例预览页；当前产品不再提供示例模板入口。"""
+    """示例成品的翻页预览器(前端从 /api/examples 取页面清单)。"""
     if db.user_for_token(ppt_session) is None:
         return RedirectResponse(config.web_path("/login"), status_code=302)
     return (config.BASE_DIR / "templates" / "viewer.html").read_text(encoding="utf-8")
@@ -220,13 +243,12 @@ def viewer(ppt_session: str = Cookie("")):
 
 @app.get("/company/cover.png")
 def company_cover() -> FileResponse:
-    """MT 公司最终模板真实封面预览图。"""
+    """公司模板真实封面预览图(风格卡用)。"""
     return FileResponse(_COMPANY_COVER_PNG, media_type="image/png")
 
 
 @app.get("/api/examples")
 def api_examples(user: dict = Depends(current_user)) -> list[dict]:
-    """兼容旧客户端；示例模板已从产品入口下线。"""
     return EXAMPLES
 
 
@@ -269,10 +291,7 @@ def api_config(user: dict = Depends(current_user)) -> dict:
         "image_gen": {"ready": img_ready, "status": img_reason,
                       "model": config.PPT_IMAGE_MODEL},
         "models": [{"value": k, "label": v["label"], "wire": v["wire"]} for k, v in config.MODELS.items()],
-        # 只向前端暴露一个最终模板；prompts.STYLES 中的旧值仅供历史任务兼容。
-        "styles": [{"value": FINAL_STYLE, "label": FINAL_STYLE_LABEL}],
-        "final_style": FINAL_STYLE,
-        "final_template_id": FINAL_TEMPLATE_ID,
+        "styles": [{"value": k, "label": v["label"]} for k, v in prompts.STYLES.items()],
         "repo": str(config.PPT_MASTER_REPO),
         "user": user["username"],
     }
@@ -280,13 +299,23 @@ def api_config(user: dict = Depends(current_user)) -> dict:
 
 @app.get("/api/styles")
 def api_styles(user: dict = Depends(current_user)) -> list[dict]:
-    """返回唯一的 MT 公司模板卡片。"""
-    return STYLE_CARDS
+    """风格卡片:公司模板 + 内置自由设计风格 + 示例成品同款风格。"""
+    return STYLE_CARDS + EXAMPLE_CARDS
 
 
 def _compose_style_brief(example_id: str) -> tuple[str, str]:
-    """把任意旧卡片值收敛到唯一的最终模板。"""
-    return prompts.style_for_template_id(example_id) or "", ""
+    """把风格卡片选择映射为内置风格;示例卡映射为 custom + 该示例的视觉风格规范。"""
+    if example_id.startswith("ex:"):
+        ex = next((e for e in EXAMPLES if e["id"] == example_id[3:]), None)
+        if ex:
+            brief = (
+                f"{ex['styleName']}(示例成品「{ex['title']}」同款):{ex['description']}。"
+                f"visual_style 锁定 {ex['style_id']},设计规范见 "
+                f"references/visual-styles/{ex['style_id']}.md,严格遵循其形状语言、"
+                f"字体气质、留白节奏与色彩纪律。"
+            )
+            return "custom", brief
+    return _CARD_TO_STYLE.get(example_id, ""), ""
 
 
 def _live_files(upload_id: str, names: list[str]) -> tuple[list[str], list[str]]:
@@ -357,8 +386,8 @@ def _sanitize_outline(raw: str) -> list[dict]:
 @app.post("/api/jobs")
 def create_job(
     mode: str = Form("plan"),  # plan=先出规划确认(默认);direct=跳过确认直接生成;recommend=旧版风格推荐
-    style: str = Form(FINAL_STYLE),
-    example_id: str = Form(""),  # 兼容旧客户端;现在只接受唯一 MT 模板卡片
+    style: str = Form("company"),
+    example_id: str = Form(""),  # 风格卡片:__company__ / __style_* 内置 / ex:示例
     pages: str = Form("auto"),
     topic: str = Form(""),
     note: str = Form(""),
@@ -371,11 +400,8 @@ def create_job(
         ready, reason = config.agent_ready()
         if not ready:
             return JSONResponse({"error": f"真实 API 执行器未就绪:{reason}"}, status_code=503)
-    # 模板入口已收敛为唯一的 MT 最终模板。旧的已知 style 别名仍可平滑迁移，
-    # 真正未知的值直接拒绝，避免客户端把任意字符串伪装成模板。
-    style = prompts.normalize_style(style, default=FINAL_STYLE)
-    if style is None:
-        return JSONResponse({"error": "当前只支持 MT 公司最终模板"}, status_code=400)
+    if style not in prompts.STYLES:
+        style = "company"
     model = model.strip()
     if model and model not in config.MODELS:
         return JSONResponse({"error": f"未注册的模型:{model}"}, status_code=400)
@@ -395,9 +421,8 @@ def create_job(
     style_brief = ""
     if mode != "recommend" and example_id:
         picked_style, style_brief = _compose_style_brief(example_id)
-        if not picked_style:
-            return JSONResponse({"error": "模板已下线,当前只支持 MT 公司最终模板"}, status_code=400)
-        style = picked_style
+        if picked_style:
+            style = picked_style
 
     kind = {"recommend": "recommend", "plan": "plan"}.get(mode, "generate")
     job = jobs.create(kind=kind, user_id=user["id"], style=style, style_brief=style_brief,
@@ -436,9 +461,9 @@ def replan(job_id: str, feedback: str = Form(...), outline: str = Form(""),
 
 
 @app.post("/api/jobs/{job_id}/confirm-plan")
-def confirm_plan(job_id: str, style: str = Form(FINAL_STYLE), outline: str = Form(...),
+def confirm_plan(job_id: str, style: str = Form("company"), outline: str = Form(...),
                  model: str = Form(""), user: dict = Depends(current_user)) -> JSONResponse:
-    """规划确认环节:用户确认(可能已手动编辑的)大纲,派生正式生成任务。
+    """规划确认环节:用户确认(可能已手动编辑的)大纲与风格,派生正式生成任务。
 
     model 可与规划任务不同——同一份大纲可分别用不同模型各生成一份,便于对比。
     """
@@ -453,9 +478,24 @@ def confirm_plan(job_id: str, style: str = Form(FINAL_STYLE), outline: str = For
     except ValueError as exc:
         return JSONResponse({"error": str(exc)}, status_code=400)
 
-    # 规划确认页不再允许切换风格；无论旧客户端提交什么值，都使用唯一模板。
-    style = FINAL_STYLE
     style_brief = ""
+    if style.startswith("ai:"):
+        try:
+            index = int(style[3:])
+            if index < 0:
+                raise ValueError(style)  # 负数会命中 Python 负索引,静默选中最后一项
+            rec = (parent.plan.get("styles") or [])[index]
+        except (ValueError, IndexError):
+            return JSONResponse({"error": "无效的风格选择"}, status_code=400)
+        if "公司蓝" in str(rec.get("name", "")):
+            style = "company"  # AI 建议的公司蓝走内置流程,保证原生封面/目录合并
+        else:
+            style, style_brief = "custom", f"{rec.get('name', '')}:{rec.get('description', '')}"
+    elif style in ("", "parent"):
+        # 跟随规划任务的风格(即提交时选的模板卡),保留示例卡携带的 style_brief
+        style, style_brief = parent.style, parent.style_brief
+    elif style not in prompts.STYLES:
+        style = "company"
 
     upload_id = parent.upload_id or parent.id
     files, dropped = _live_files(upload_id, parent.files)
@@ -476,10 +516,11 @@ def generate_from_recommendation(job_id: str, choice: int = Form(...),
         return JSONResponse({"error": "推荐任务不存在或未完成"}, status_code=400)
     if not (0 <= choice < len(parent.recommendations)):
         return JSONResponse({"error": "无效的风格选择"}, status_code=400)
+    rec = parent.recommendations[choice]
+    brief = f"{rec.get('name', '')}:{rec.get('description', '')}"
     upload_id = parent.upload_id or parent.id
     files, dropped = _live_files(upload_id, parent.files)
-    # 旧版推荐接口保留为兼容入口，但生成结果也必须使用唯一 MT 模板。
-    job = jobs.create(kind="generate", user_id=user["id"], style=FINAL_STYLE, style_brief="",
+    job = jobs.create(kind="generate", user_id=user["id"], style="custom", style_brief=brief,
                       pages=parent.pages, topic=parent.topic, note=parent.note,
                       files=files, upload_id=upload_id,
                       mock=config.mock_enabled(), model=parent.model or config.PPT_MODEL,
@@ -516,18 +557,6 @@ def _can_resume(job: jobs.Job) -> bool:
 
 def _public_job(job: jobs.Job) -> dict:
     payload = job.public()
-    # 历史任务可能把旧风格/四项推荐写进 SQLite。它们仍可在历史列表中查看，
-    # 但不能通过 API 再暴露成可选模板；统一投影为当前唯一 MT 模板。
-    payload["style"] = prompts.normalize_style(payload.get("style")) or FINAL_STYLE
-    payload["style_brief"] = ""
-    canonical_item = dict(prompts.MOCK_RECOMMENDATIONS[0])
-    if payload.get("kind") == "recommend" and payload.get("recommendations"):
-        payload["recommendations"] = [canonical_item]
-    plan = payload.get("plan")
-    if isinstance(plan, dict) and ("styles" in plan or payload.get("kind") == "plan"):
-        plan = dict(plan)
-        plan["styles"] = [dict(canonical_item)]
-        payload["plan"] = plan
     payload["can_resume"] = _can_resume(job)
     return payload
 

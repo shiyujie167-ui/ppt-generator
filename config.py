@@ -215,8 +215,6 @@ PPT_IMAGE_MODEL = os.environ.get("PPT_IMAGE_MODEL", "").strip()
 PPT_IMAGE_BASE_URL = (os.environ.get("PPT_IMAGE_BASE_URL", "").strip() or PPT_API_BASE_URL)
 PPT_IMAGE_API_KEY = (os.environ.get("PPT_IMAGE_API_KEY", "").strip() or PPT_API_KEY)
 PPT_IMAGE_QUALITY = os.environ.get("PPT_IMAGE_QUALITY", "").strip()
-# Keep generated files' extension and bytes aligned. Override with jpeg/webp if needed.
-PPT_IMAGE_FORMAT = os.environ.get("PPT_IMAGE_FORMAT", "png").strip().lower() or "png"
 
 
 def image_gen_ready() -> tuple[bool, str]:
@@ -244,8 +242,6 @@ def image_gen_env() -> dict[str, str]:
     }
     if PPT_IMAGE_QUALITY:
         env["OPENAI_QUALITY"] = PPT_IMAGE_QUALITY
-    if PPT_IMAGE_FORMAT:
-        env["OPENAI_OUTPUT_FORMAT"] = PPT_IMAGE_FORMAT
     return env
 
 

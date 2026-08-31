@@ -114,9 +114,8 @@ function show(i) {
 fetch('api/examples').then(r => r.json()).then(list => {
   ex = list.find(e => e.id === id);
   if (!ex) {
-    $('#title').textContent = '历史示例已下线';
+    $('#title').textContent = '示例不存在';
     $('#title').className = 'err';
-    $('#sub').textContent = '当前产品只提供 MT 公司最终模板';
     return;
   }
   document.title = `${ex.title} · 翻页预览 - PPT Generator`;
